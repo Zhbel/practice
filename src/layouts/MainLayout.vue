@@ -78,6 +78,6 @@ export default {
   margin-left: 2%;
 }
 .arep{
-  width: 70% !important;
+  width: 80% !important;
 }
 </style>

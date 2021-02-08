@@ -170,6 +170,14 @@ const routes = [{
         meta: { layout: 'main' },
         component: () =>
             import ('../views/Latex.vue')
+    },
+
+    {
+        path: '/ref',
+        name: 'ref',
+        meta: { layout: 'main' },
+        component: () =>
+            import ('../views/Ref.vue')
     }
 ]
 

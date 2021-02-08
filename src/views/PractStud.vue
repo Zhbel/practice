@@ -252,7 +252,8 @@ export default {
     },
 
         openDirect(prac){
-
+          var id = prac.id + '_' + this.stud[0].login
+          this.$router.push('/Ref?ref=' + id)
         },
 
        async openRep(prac){

@@ -146,5 +146,39 @@ export default {
         },
 
 
+        async getRefById({ commit, dispatch }, id) {
+            try {
+                const ref = (await firebase.database().ref(`/referal/${id}/`).once('value')).val() || {}
+                return ref
+                    //return Object.keys(practice).map(key => ({...practice[key], id: key }))
+
+            } catch (e) {
+                commit('setError', e)
+                throw e
+            }
+        },
+
+        async UpdateRef({ commit, dispatch }, { id, city, comment, contractDate, contractNum, dean, listGraph, listMat, order, orderdate, pracHead, pracResult, pracTaskRes, pracbase, prodObj, recomend, refNum, studChar, theme, univYear }) {
+            try {
+                await firebase.database().ref(`/referal/`).child(id).update({ city, comment, contractDate, contractNum, dean, listGraph, listMat, order, orderdate, pracHead, pracResult, pracTaskRes, pracbase, prodObj, recomend, refNum, studChar, theme, univYear })
+                console.log('updateRef')
+            } catch (e) {
+                commit('setError', e)
+                throw e
+            }
+        },
+
+        async getPracById({ commit, dispatch }, id) {
+            try {
+                const ref = (await firebase.database().ref(`/prac/${id}/`).once('value')).val() || {}
+                return ref
+                    //return Object.keys(practice).map(key => ({...practice[key], id: key }))
+
+            } catch (e) {
+                commit('setError', e)
+                throw e
+            }
+        },
+
     }
 }

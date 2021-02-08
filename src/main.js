@@ -5,7 +5,9 @@ import './registerServiceWorker'
 import router from './router'
 import store from './store'
 import messagePlugin from '@/utils/message.plugin'
-import VueLaTeX2JS from 'latex2vue';
+import VueSimpleMarkdown from 'vue-simple-markdown'
+import 'vue-simple-markdown/dist/vue-simple-markdown.css'
+//import VueLaTeX2JS from 'latex2vue';
 
 
 import firebase from 'firebase/app'
@@ -16,7 +18,8 @@ Vue.config.productionTip = false
 
 Vue.use(Vuelidate)
 Vue.use(messagePlugin)
-Vue.use(VueLaTeX2JS);
+Vue.use(VueSimpleMarkdown)
+    //Vue.use(VueLaTeX2JS);
 
 firebase.initializeApp({
     apiKey: "AIzaSyBAQnNX_8mTXNNZYm-YPMtZBzb-G_ilg_Q",
@@ -45,7 +48,9 @@ firebase.auth().onAuthStateChanged(() => {
         app = new Vue({
             router,
             store,
-            render: h => h(App)
+            render: h => h(App),
+
+
         }).$mount('#app')
     }
 })
