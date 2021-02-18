@@ -71,7 +71,7 @@ export default {
 }
 .textarea{
   width: 80%;
-  height: 9rem;
+  height: 10rem;
   font-size: 105%;
 }
 .doc{

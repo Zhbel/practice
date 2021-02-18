@@ -26,6 +26,9 @@
 </template>
 
 <script>
+import { saveAs } from 'file-saver';
+import { WidthType, BorderStyle, Document, Paragraph, Packer, TextRun, Header, Footer, AlignmentType, HeadingLevel } from "docx";
+
 export default {
     data: () => ({
         idRep: '',
