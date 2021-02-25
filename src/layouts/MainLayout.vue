@@ -74,10 +74,23 @@ export default {
   height: 10rem;
   font-size: 105%;
 }
+.dparea{
+  width: 100%;
+  height: 10rem;
+  font-size: 115%;
+}
 .doc{
   margin-left: 2%;
 }
 .arep{
   width: 80% !important;
+}
+td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+table {
+   table-layout:fixed;
 }
 </style>

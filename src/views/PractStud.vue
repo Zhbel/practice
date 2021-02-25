@@ -58,6 +58,8 @@
 </template>
 
 <script>
+import { format, parse } from "date-fns";
+
 export default {
     data: () => ({
         login: '',
@@ -67,13 +69,14 @@ export default {
         edlvls: [],
         selprac: [],
         tmpdir: {
-                  id: '',
+                  login: '',
                   practype: '',
                   pid: '',
                   sid: '',
                 },
         loadPrac: false,
         openPracBox: false,
+        format: 'dd_MM_yyyy',
         practable: '',
         currentPrac: '',
         textinfo: '',
@@ -97,13 +100,36 @@ export default {
     },
     
     methods: {
+
+      toDate (dateStr) {
+      const [day, month, year] = dateStr.split(".")
+      return new Date(year, month - 1, day)
+      },
+
+      customFormatter(date) {
+      //const moment = require('moment')
+      return format(date, this.format)
+      //return moment(date).format('DD-MM-yyyy');
+      },
+
+      customParser(date) {
+        return parse(date, this.format, new Date())
+      },
+
       async openPrac(prac){
           try{
           this.currentPrac = this.prac.find(pract => pract.id == prac.id)
 
-          var id = prac.id + '_' + this.stud[0].login
-          //console.log(id)
-          this.selprac = await this.$store.dispatch('checkDir', id)
+          var pid = prac.id
+          var sid = this.stud[0].login
+          this.selprac = await this.$store.dispatch('getRefById', { pid, sid})
+
+         
+
+          // console.log(prac.id)
+          // console.log(id)
+
+
          // console.log(this.selprac)
 
          // console.log(Object.keys(this.selprac))
@@ -113,11 +139,12 @@ export default {
             this.openPracBox = true
           } else{
            // console.log('joined else')
-            this.tmpdir.id = prac.id + '_' + this.stud[0].login
+            this.tmpdir.login = this.stud[0].login
             this.tmpdir.practype = prac.type
             this.tmpdir.pid = prac.id
             this.tmpdir.sid = this.stud[0].id
-            await this.$store.dispatch('addDir', this.tmpdir)
+           
+            await this.$store.dispatch('addRef', this.tmpdir)
             var edlevel = (await this.$store.dispatch('getGroupById', this.stud[0].grid)).edlvl
             this.practable = this.edlvls.find(edlvl => edlvl.title == prac.type && edlvl.edlvl == edlevel).tablename
 
@@ -125,7 +152,7 @@ export default {
               case 'pracAnip':
                // console.log('switch pracAnip')
                 var tmpAnip = {
-                  id: prac.id + '_' + this.stud[0].login,
+                  log: this.stud[0].login,
                   pid: prac.id,
                   sid: this.stud[0].id,
                 }
@@ -134,7 +161,7 @@ export default {
               case 'pracAni':
                // console.log('switch pracAni')
                 var tmpAni = {
-                  id: prac.id + '_' + this.stud[0].login,
+                  log: this.stud[0].login,
                   pid: prac.id,
                   sid: this.stud[0].id,
                 }
@@ -143,7 +170,7 @@ export default {
               case 'pracApp':
                // console.log('switch pracApp')
                 var tmpApp = {
-                  id: prac.id + '_' + this.stud[0].login,
+                  log: this.stud[0].login,
                   pid: prac.id,
                   sid: this.stud[0].id,
                 }
@@ -152,7 +179,7 @@ export default {
               case 'pracByop':
                // console.log('switch pracByop')
                 var tmpByop = {
-                  id: prac.id + '_' + this.stud[0].login,
+                  log: this.stud[0].login,
                   pid: prac.id,
                   sid: this.stud[0].id,
                 }
@@ -161,7 +188,7 @@ export default {
               case 'pracByNIR':
                // console.log('switch pracByNIR')
                 var tmpByNIR = {
-                  id: prac.id + '_' + this.stud[0].login,
+                  log: this.stud[0].login,
                   pid: prac.id,
                   sid: this.stud[0].id,
                 }
@@ -170,7 +197,7 @@ export default {
               case 'pracBptp':
                // console.log('switch pracBptp')
                 var tmpBptp = {
-                  id: prac.id + '_' + this.stud[0].login,
+                  log: this.stud[0].login,
                   pid: prac.id,
                   sid: this.stud[0].id,
                 }
@@ -179,7 +206,7 @@ export default {
               case 'pracBpdp':
                // console.log('switch pracBpdp')
                 var tmpBpdp = {
-                  id: prac.id + '_' + this.stud[0].login,
+                  log: this.stud[0].login,
                   pid: prac.id,
                   sid: this.stud[0].id,
                 }
@@ -188,7 +215,7 @@ export default {
               case 'pracMyop':
                // console.log('switch pracMyop')
                 var tmpMyop = {
-                  id: prac.id + '_' + this.stud[0].login,
+                  log: this.stud[0].login,
                   pid: prac.id,
                   sid: this.stud[0].id,
                 }
@@ -197,7 +224,7 @@ export default {
               case 'pracMpNIR':
                // console.log('switch pracMpNIR')
                 var tmpMpNIR = {
-                  id: prac.id + '_' + this.stud[0].login,
+                  log: this.stud[0].login,
                   pid: prac.id,
                   sid: this.stud[0].id,
                 }
@@ -206,7 +233,7 @@ export default {
               case 'pracMptp':
                // console.log('switch pracMptp')
                 var tmpMptp = {
-                  id: prac.id + '_' + this.stud[0].login,
+                  log: this.stud[0].login,
                   pid: prac.id,
                   sid: this.stud[0].id,
                 }
@@ -252,61 +279,61 @@ export default {
     },
 
         openDirect(prac){
-          var id = prac.id + '_' + this.stud[0].login
-          this.$router.push('/Ref?ref=' + id)
+          //var id = prac.id + '_' + this.stud[0].login
+          this.$router.push('/Ref?prac=' + prac.id + '&stud=' + this.stud[0].login)
         },
 
        async openRep(prac){
-        var id = prac.id + '_' + this.stud[0].login
+        //var id = prac.id + '_' + this.stud[0].login
         var edlevel = (await this.$store.dispatch('getGroupById', this.stud[0].grid)).edlvl
         var tablename = (this.edlvls.find(edlvl => edlvl.title == prac.type && edlvl.edlvl == edlevel)).tablename
-        console.log(tablename)
+        //console.log(tablename)
 
 
         switch (tablename) {
               case 'pracAnip':
-                this.$router.push('/rep/anip?report=' + id)
+                this.$router.push('/rep/anip?prac=' + prac.id + '&stud=' + this.stud[0].login)
                 break;
               case 'pracAni':
-                this.$router.push('/rep/ani?report=' + id)
+                this.$router.push('/rep/ani?prac=' + prac.id + '&stud=' + this.stud[0].login)
                 break;
               case 'pracApp':
-                this.$router.push('/rep/app?report=' + id)
+                this.$router.push('/rep/app?prac=' + prac.id + '&stud=' + this.stud[0].login)
                // console.log('switch pracApp')
 
                 break;
               case 'pracByop':
-                this.$router.push('/rep/byop?report=' + id)
+                this.$router.push('/rep/byop?prac=' + prac.id + '&stud=' + this.stud[0].login)
                // console.log('switch pracByop')
 
                 break;
               case 'pracByNIR':
-                this.$router.push('/rep/byNIR?report=' + id)
+                this.$router.push('/rep/byNIR?prac=' + prac.id + '&stud=' + this.stud[0].login)
                // console.log('switch pracByNIR')
 
                 break;
               case 'pracBptp':
-                this.$router.push('/rep/bptp?report=' + id)
+                this.$router.push('/rep/bptp?prac=' + prac.id + '&stud=' + this.stud[0].login)
                // console.log('switch pracBptp')
 
                 break;
               case 'pracBpdp':
+                this.$router.push('/rep/bpdp?prac=' + prac.id + '&stud=' + this.stud[0].login)
                // console.log('switch pracBpdp')
-                this.$router.push('/rep/bpdp?report=' + id)
                 break;
               case 'pracMyop':
                // console.log('switch pracMyop')
-               this.$router.push('/rep/myop?report=' + id)
+               this.$router.push('/rep/myop?prac=' + prac.id + '&stud=' + this.stud[0].login)
 
                 break;
               case 'pracMpNIR':
                // console.log('switch pracMpNIR')
-               this.$router.push('/rep/mpNIR?report=' + id)
+               this.$router.push('/rep/mpNIR?prac=' + prac.id + '&stud=' + this.stud[0].login)
 
                 break;
               case 'pracMptp':
                // console.log('switch pracMptp')
-               this.$router.push('/rep/mptp?report=' + id)
+               this.$router.push('/rep/mptp?prac=' + prac.id + '&stud=' + this.stud[0].login)
 
                 break;
               default:
@@ -321,8 +348,30 @@ export default {
         
         },
 
-        openDiary(prac){
+        async openDiary(prac){
+            var pid = prac.id
+            var sid = this.stud[0].login
+            var getPd = await this.$store.dispatch('getPd', {pid, sid})
 
+            if(Object.keys(getPd) != 0){
+              this.$router.push('/pd?prac=' + prac.id + '&stud=' + this.stud[0].login)
+            }
+            else{
+           var datetest = [];
+            var tmp = this.toDate(this.currentPrac.datestart)
+
+            while(tmp <= this.toDate(this.currentPrac.dateend)){
+              //console.log(tmp)
+              datetest.push(this.customFormatter(tmp))
+              tmp.setDate(tmp.getDate() + 1)
+            }
+
+            datetest.forEach(async date => {
+            
+            await this.$store.dispatch('addPd', {pid, sid, date})
+          });
+          this.$router.push('/pd?prac=' + prac.id + '&stud=' + this.stud[0].login)
+        }
         },
 
         

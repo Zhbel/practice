@@ -55,6 +55,9 @@ export default {
         async deletePrac({ commit, dispatch }, id) {
             try {
                 //console.log(grID)
+                await dispatch('deletePd', id)
+                await dispatch('deleteRef', id)
+                await dispatch('deleteRep', id)
                 await firebase.database().ref(`/prac/`).child(id).remove()
                 console.log('deleted prac')
             } catch (e) {
@@ -90,7 +93,7 @@ export default {
                 prac = await dispatch('getPracGr', id)
                     //console.log(prac)
                 prac.forEach(async prc => {
-                    await firebase.database().ref(`/prac/`).child(prc.id).remove()
+                    await dispatch('deletePrac', prc.id)
                 })
                 console.log('deleted group prac')
             } catch (e) {
@@ -99,20 +102,10 @@ export default {
             }
         },
 
-        async checkDir({ commit, dispatch }, id) {
-            try {
-                const dir = (await firebase.database().ref(`/referal/${id}`).once('value')).val() || {}
-                return dir
 
-            } catch (e) {
-                commit('setError', e)
-                throw e
-            }
-        },
-
-        async addDir({ commit, dispatch }, dir) {
+        async addRef({ commit, dispatch }, dir) {
             try {
-                await firebase.database().ref(`/referal/${dir.id}/`).set({
+                await firebase.database().ref(`/referral/${dir.pid}/${dir.login}`).set({
                     sid: dir.sid,
                     pid: dir.pid,
                     practype: dir.practype,
@@ -146,9 +139,9 @@ export default {
         },
 
 
-        async getRefById({ commit, dispatch }, id) {
+        async getRefById({ commit, dispatch }, { pid, sid }) {
             try {
-                const ref = (await firebase.database().ref(`/referal/${id}/`).once('value')).val() || {}
+                const ref = (await firebase.database().ref(`/referral/${pid}/${sid}`).once('value')).val() || {}
                 return ref
                     //return Object.keys(practice).map(key => ({...practice[key], id: key }))
 
@@ -158,9 +151,9 @@ export default {
             }
         },
 
-        async UpdateRef({ commit, dispatch }, { id, city, comment, contractDate, contractNum, dean, listGraph, listMat, order, orderdate, pracHead, pracResult, pracTaskRes, pracbase, prodObj, recomend, refNum, studChar, theme, univYear }) {
+        async UpdateRef({ commit, dispatch }, { pid, log, city, comment, contractDate, contractNum, dean, listGraph, listMat, order, orderdate, pracHead, pracResult, pracTaskRes, pracbase, prodObj, recomend, refNum, studChar, theme, univYear }) {
             try {
-                await firebase.database().ref(`/referal/`).child(id).update({ city, comment, contractDate, contractNum, dean, listGraph, listMat, order, orderdate, pracHead, pracResult, pracTaskRes, pracbase, prodObj, recomend, refNum, studChar, theme, univYear })
+                await firebase.database().ref(`/referral/${pid}/`).child(log).update({ city, comment, contractDate, contractNum, dean, listGraph, listMat, order, orderdate, pracHead, pracResult, pracTaskRes, pracbase, prodObj, recomend, refNum, studChar, theme, univYear })
                 console.log('updateRef')
             } catch (e) {
                 commit('setError', e)
@@ -179,6 +172,130 @@ export default {
                 throw e
             }
         },
+
+        async addPd({ commit, dispatch }, { pid, sid, date }) {
+
+            try {
+                await firebase.database().ref(`/pd/${pid}/${sid}/${date}`).set({
+                        text: ''
+                    })
+                    //return Object.keys(practice).map(key => ({...practice[key], id: key }))
+
+            } catch (e) {
+                commit('setError', e)
+                throw e
+            }
+        },
+
+        async getPd({ commit, dispatch }, { pid, sid }) {
+
+            try {
+                //console.log(pid, sid)
+                const pd = (await firebase.database().ref(`/pd/${pid}/${sid}/`).once('value')).val() || {}
+                return Object.keys(pd).map(key => ({...pd[key], date: key }))
+                    //return Object.keys(students).map(key => ({...students[key], id: key }))
+                    //return Object.keys(practice).map(key => ({...practice[key], id: key }))
+
+            } catch (e) {
+                commit('setError', e)
+                throw e
+            }
+        },
+
+        async UpdatePDay({ commit, dispatch }, { pid, sid, date, text }) {
+            try {
+                await firebase.database().ref(`/pd/${pid}/${sid}/`).child(date).update({ text })
+                console.log('updatePDay')
+            } catch (e) {
+                commit('setError', e)
+                throw e
+            }
+        },
+
+        async deletePd({ commit, dispatch }, pid) {
+            try {
+                console.log(pid)
+                await firebase.database().ref(`/pd/`).child(pid).remove()
+                console.log('deleted pd')
+            } catch (e) {
+                commit('setError', e)
+                throw e
+            }
+        },
+
+
+        async deleteRef({ commit, dispatch }, pid) {
+            try {
+                console.log(pid)
+                await firebase.database().ref(`/referral/`).child(pid).remove()
+                console.log('deleted ref')
+            } catch (e) {
+                commit('setError', e)
+                throw e
+            }
+        },
+
+
+        async deleteRep({ commit, dispatch }, pid) {
+            try {
+                console.log(pid)
+                await firebase.database().ref(`/pracAni/`).child(pid).remove()
+                await firebase.database().ref(`/pracAnip/`).child(pid).remove()
+                await firebase.database().ref(`/pracApp/`).child(pid).remove()
+                await firebase.database().ref(`/pracBpdp/`).child(pid).remove()
+                await firebase.database().ref(`/pracBptp/`).child(pid).remove()
+                await firebase.database().ref(`/pracByNIR/`).child(pid).remove()
+                await firebase.database().ref(`/pracByop/`).child(pid).remove()
+                await firebase.database().ref(`/pracMptp/`).child(pid).remove()
+                await firebase.database().ref(`/pracMpNIR/`).child(pid).remove()
+                await firebase.database().ref(`/pracMyop/`).child(pid).remove()
+                console.log('deleted rep')
+            } catch (e) {
+                commit('setError', e)
+                throw e
+            }
+        },
+        // async deleteRefById({ commit, dispatch }, pid) {
+        //     try {
+        //         //console.log(pid)
+        //         await firebase.database().ref(`/referral/`).child(pid).remove()
+        //         console.log('deleted ref')
+        //     } catch (e) {
+        //         commit('setError', e)
+        //         throw e
+        //     }
+        // },
+
+
+        // async getRefList({ commit, dispatch }) {
+        //     try {
+        //         const rList = (await firebase.database().ref(`/referal/`).once('value')).val() || {}
+        //         return Object.keys(rList).map(key => ({...rList[key], id: key }))
+        //     } catch (e) {
+        //         commit('setError', e)
+        //         throw e
+        //     }
+        // },
+
+        // async deleteRefPr({ commit, dispatch }, id) {
+        //     try {
+        //         var ref = []
+        //         ref = await dispatch('getRefList')
+        //         ref.forEach(async r => {
+        //                 console.log(r.pid)
+        //                 if (r.pid == id) {
+        //                     await dispatch('deleteRefById', r.id)
+        //                 }
+        //             })
+        //             // console.log('deleted group prac')
+        //     } catch (e) {
+        //         commit('setError', e)
+        //         throw e
+        //     }
+        // },
+
+
+
 
     }
 }

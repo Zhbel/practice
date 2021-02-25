@@ -34,7 +34,8 @@ import { WidthType, BorderStyle, Document, Paragraph, Packer, TextRun, Header, F
 
 export default {
     data: () => ({
-        idRep: '',
+        pid: '',
+        sid: '',
         report: '',
         ref: '',
         student: '',
@@ -52,24 +53,32 @@ export default {
     },
 
     async mounted() {
-        this.idRep = this.$route.query.report
+        this.pid = this.$route.query.prac
+        this.sid = this.$route.query.stud
         //console.log(this.idRep)
-        this.report = await this.$store.dispatch('getBptpByID', this.idRep)
+        var pid = this.pid
+        var sid = this.sid
+        //console.log(this.pid)
+        this.report = await this.$store.dispatch('getBptpByID', {pid, sid})
         this.student = await this.$store.dispatch('getStudById', this.report.sid)
+        Object.assign(this.report, {log: this.sid});
+
+
+        //console.log(this.idRep)
         this.group = await this.$store.dispatch('getGroupById', this.student.grid)
-        this.ref = await this.$store.dispatch('getRefById', this.idRep)
+        this.ref = await this.$store.dispatch('getRefById', {pid, sid})
         this.year = new Date().getFullYear()
         this.prac = await this.$store.dispatch('getPracById', this.report.pid)
         this.head = await this.$store.dispatch('getHeadById', this.prac.pid)
 
+
         this.short_sname = this.initials(this.student.fname)
         this.short_hname = this.initials(this.head.fname)
 
-       
+
         //this.short_sname = tmp.join('')
-        //console.log(this.short_sname)
+        //console.log(this.short_hname)
         
-        Object.assign(this.report, {id: this.idRep});
 
         //console.log(this.splitLines(this.report.intro))
 
@@ -190,7 +199,7 @@ export default {
                   }),
 
                   new TextRun( {
-                  text: "Кафедра «Вычислительная техника и инженерная кибернетика»",
+                  text: "Кафедра «" + this.head.depart + "»",
                   bold: false,
                   font: "Times New Roman",
                   size: 28,
@@ -329,7 +338,7 @@ export default {
                     }),
 
                     new TextRun( {
-                    text: "от кафедры " + this.head.depart + "\t\t___________________________ " + this.short_hname,
+                    text: "от кафедры " + this.head.abbr + "\t\t___________________________ " + this.short_hname,
                     bold: false,
                     font: "Times New Roman",
                     size: 28,

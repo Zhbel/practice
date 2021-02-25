@@ -178,6 +178,14 @@ const routes = [{
         meta: { layout: 'main' },
         component: () =>
             import ('../views/Ref.vue')
+    },
+
+    {
+        path: '/pd',
+        name: 'pd',
+        meta: { layout: 'main' },
+        component: () =>
+            import ('../views/pd.vue')
     }
 ]
 

@@ -38,17 +38,25 @@
 <script>
 export default {
     data: () => ({
-        idRep: '',
+        pid: '',
+        sid: '',
         report: '',
         student: '',
     }),
 
     async mounted() {
-        this.idRep = this.$route.query.report
+     
+        this.pid = this.$route.query.prac
+        this.sid = this.$route.query.stud
         //console.log(this.idRep)
-        this.report = await this.$store.dispatch('getAnipByID', this.idRep)
+        var pid = this.pid
+        var sid = this.sid
+        this.report = await this.$store.dispatch('getAnipByID', {pid, sid})
         this.student = await this.$store.dispatch('getStudById', this.report.sid)
-        Object.assign(this.report, {id: this.idRep});
+       // console.log(this.student)
+        Object.assign(this.report, {log: this.sid});
+       
+        //console.log(this.idRep)
         //console.log(this.report)
         //console.log(this.student)
     },

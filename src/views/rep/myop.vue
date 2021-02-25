@@ -28,18 +28,23 @@
 <script>
 export default {
     data: () => ({
-        idRep: '',
+        pid: '',
+        sid: '',
         report: '',
         student: '',
     }),
 
     async mounted() {
-        this.idRep = this.$route.query.report
-       // console.log(this.idRep)
-        this.report = await this.$store.dispatch('getMyopByID', this.idRep)
+        this.pid = this.$route.query.prac
+        this.sid = this.$route.query.stud
+        //console.log(this.idRep)
+        var pid = this.pid
+        var sid = this.sid
+        //console.log(this.pid)
+        this.report = await this.$store.dispatch('getMyopByID', {pid, sid})
         this.student = await this.$store.dispatch('getStudById', this.report.sid)
-        Object.assign(this.report, {id: this.idRep});
-        //console.log(this.report)
+        Object.assign(this.report, {log: this.sid});
+
        // console.log(this.student)
     },
 

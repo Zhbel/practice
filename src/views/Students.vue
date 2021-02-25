@@ -26,7 +26,6 @@
 <!--StudTable-->
     
     <div v-if="loadTable">
-    <div id="pdf1">
     <table class="ui-table ui-table--hover preview">
     <thead>
       <tr>
@@ -53,7 +52,7 @@
         
       </tr>
     </tbody>
-  </table></div>
+  </table>
   <button class="button button-default authd" v-on:click="authGr()">Аутентификационные данные</button>
   </div>
   
@@ -155,6 +154,23 @@
               </div>
               </div>
           <!--Message Box Edit-->
+         
+         
+          <!--Message Box-->
+          <div class="ui-messageBox__wrapper" v-if="delBox"  style="display: flex;">
+            <div class="ui-messageBox fadeInDown group" @click.stop="">
+             <div class="ui-messageBox__header"><span class="messageBox-title">Внимание!</span>
+             <span class="button-close ui-messageBox-close" @click="canсelDel"></span></div>
+             <div class="ui-messageBox__content"><span>Вы желаете удалить студента из системы?</span>
+             <!--Selector-->
+             </div>
+              <div class="ui-messageBox__footer">
+              <div class="button button-light ui-messageBox-cancel" @click="canсelDel">Нет</div>
+              <div class="button button-primary ui-messageBox-ok" @click="finishDel">Да</div>
+              </div>
+              </div>
+              </div>
+          <!--Message Box-->
       </div>
     </body>
 </template>
@@ -272,9 +288,29 @@ export default {
     },
 
 
-    async deleteStud(student){
-      await this.$store.dispatch('deleteStudent', student)
-      this.students = await this.$store.dispatch('getStudGr', this.currentGr)
+    
+    deleteStud(student){
+      this.delBox = true
+      this.delstud = student
+    },
+
+    canсelDel(){
+      this.delBox = false
+      this.delstud = ''
+    },
+
+    async finishDel(){
+      try{
+               await this.$store.dispatch('deleteStudent', this.delstud)
+              this.canсelDel()
+              this.students = await this.$store.dispatch('getStudGr', this.currentGr)
+              this.$success('Студент удален')
+              }
+              catch (e) {
+                this.canсelDel()
+                this.students = await this.$store.dispatch('getStudGr', this.currentGr)
+                this.$error("Ошибка при удалении!")
+              }
     },
 
     editStud(student){
@@ -403,6 +439,8 @@ export default {
         state: true,
         id: '',
       },
+      delstud: '',
+      delBox: false,
       studT: '',
       EditButton: false,
       inputS: '',
@@ -438,9 +476,6 @@ export default {
 }
 .ui-text-smaller.table{
   color: #000;
-}
-.ui-table--hover.preview{
-  width: max-content;
 }
 .button.prac{
   font-size: 85%;

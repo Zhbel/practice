@@ -98,6 +98,23 @@
               </div>
               </div>
           <!--Message Box-->
+
+          <!--Message Box-->
+        <div class="ui-messageBox__wrapper" v-if="truncBox"  style="display: flex;">
+            <div class="ui-messageBox fadeInDown group" @click.stop="">
+             <div class="ui-messageBox__header"><span class="messageBox-title">Внимание!</span>
+             <span class="button-close ui-messageBox-close" @click="cancelTrunc"></span></div>
+             <div class="ui-messageBox__content"><span>Вы желаете удалить из системы данные всех студентов группы?</span>
+             <!--Selector-->
+             </div>
+              <div class="ui-messageBox__footer">
+              <div class="button button-light ui-messageBox-cancel" @click="cancelTrunc">Нет</div>
+              <div class="button button-primary ui-messageBox-ok" @click="finishTrunc">Да</div>
+              </div>
+              </div>
+              </div>
+          <!--Message Box-->
+
           </div>
     </body>
 </template>
@@ -112,6 +129,7 @@ export default {
         students: [],
         AddButton: false,
         EditButton: false,
+        truncBox: false,
         groupT: '',
         title: '',
         spec: '',
@@ -153,13 +171,33 @@ export default {
       this.students = await this.$store.dispatch('getStudGr', group.id)
       if( this.students.length == 0){
         this.$message('В группе нет студентов')
+      } else{
+        this.truncBox = true 
       }
-      this.students.forEach(async student => {
-         await this.$store.dispatch('deleteStudent', student)
-      })
 
     },
 
+    cancelTrunc(){
+      this.truncBox = false
+      this.students = []
+    },
+
+    finishTrunc(){
+      try{
+        this.students.forEach(async student => {
+         await this.$store.dispatch('deleteStudent', student)
+        })
+        this.cancelTrunc()
+        this.$success('Студенты удалены')
+        }
+        catch (e) {
+          this.cancelTrunc()
+          this.$error("Ошибка при удалении!")
+        }
+
+    },
+
+    
     addGr(){
       this.AddButton = true
       this.mboxTitle = 'Добавить группу'

@@ -4,7 +4,7 @@ export default {
     actions: {
         async addAnip({ commit, dispatch }, tmpAnip) {
             try {
-                await firebase.database().ref(`/pracAnip/${tmpAnip.id}/`).set({
+                await firebase.database().ref(`/pracAnip/${tmpAnip.pid}/${tmpAnip.log}/`).set({
                     sid: tmpAnip.sid,
                     pid: tmpAnip.pid,
                     pracBase: '',
@@ -28,7 +28,7 @@ export default {
 
         async addAni({ commit, dispatch }, tmpAni) {
             try {
-                await firebase.database().ref(`/pracAni/${tmpAni.id}/`).set({
+                await firebase.database().ref(`/pracAni/${tmpAni.pid}/${tmpAni.log}/`).set({
                     sid: tmpAni.sid,
                     pid: tmpAni.pid,
                     workbefore: '',
@@ -49,7 +49,7 @@ export default {
 
         async addApp({ commit, dispatch }, tmpApp) {
             try {
-                await firebase.database().ref(`/pracApp/${tmpApp.id}/`).set({
+                await firebase.database().ref(`/pracApp/${tmpApp.pid}/${tmpApp.log}/`).set({
                         sid: tmpApp.sid,
                         pid: tmpApp.pid,
                         placeDesc: '',
@@ -69,7 +69,7 @@ export default {
 
         async addByop({ commit, dispatch }, tmpByop) {
             try {
-                await firebase.database().ref(`/pracByop/${tmpByop.id}/`).set({
+                await firebase.database().ref(`/pracByop/${tmpByop.pid}/${tmpByop.log}/`).set({
                         sid: tmpByop.sid,
                         pid: tmpByop.pid,
                         taskResults: '',
@@ -88,7 +88,7 @@ export default {
 
         async addByNIR({ commit, dispatch }, tmpByNIR) {
             try {
-                await firebase.database().ref(`/pracByNIR/${tmpByNIR.id}/`).set({
+                await firebase.database().ref(`/pracByNIR/${tmpByNIR.pid}/${tmpByNIR.log}/`).set({
                         sid: tmpByNIR.sid,
                         pid: tmpByNIR.pid,
                         taskResults: '',
@@ -107,7 +107,7 @@ export default {
 
         async addBptp({ commit, dispatch }, tmpBptp) {
             try {
-                await firebase.database().ref(`/pracBptp/${tmpBptp.id}/`).set({
+                await firebase.database().ref(`/pracBptp/${tmpBptp.pid}/${tmpBptp.log}/`).set({
                         sid: tmpBptp.sid,
                         pid: tmpBptp.pid,
                         intro: '',
@@ -127,7 +127,7 @@ export default {
 
         async addBpdp({ commit, dispatch }, tmpBpdp) {
             try {
-                await firebase.database().ref(`/pracBpdp/${tmpBpdp.id}/`).set({
+                await firebase.database().ref(`/pracBpdp/${tmpBpdp.pid}/${tmpBpdp.log}/`).set({
                         sid: tmpBpdp.sid,
                         pid: tmpBpdp.pid,
                         intro: '',
@@ -145,7 +145,7 @@ export default {
 
         async addMyop({ commit, dispatch }, tmpMyop) {
             try {
-                await firebase.database().ref(`/pracMyop/${tmpMyop.id}/`).set({
+                await firebase.database().ref(`/pracMyop/${tmpMyop.pid}/${tmpMyop.log}/`).set({
                         sid: tmpMyop.sid,
                         pid: tmpMyop.pid,
                         taskResults: '',
@@ -164,7 +164,7 @@ export default {
 
         async addMpNIR({ commit, dispatch }, tmpMpNIR) {
             try {
-                await firebase.database().ref(`/pracMpNIR/${tmpMpNIR.id}/`).set({
+                await firebase.database().ref(`/pracMpNIR/${tmpMpNIR.pid}/${tmpMpNIR.log}/`).set({
                         sid: tmpMpNIR.sid,
                         pid: tmpMpNIR.pid,
                         taskResults: '',
@@ -183,7 +183,7 @@ export default {
 
         async addMptp({ commit, dispatch }, tmpBptp) {
             try {
-                await firebase.database().ref(`/pracMptp/${tmpBptp.id}/`).set({
+                await firebase.database().ref(`/pracMptp/${tmpBptp.pid}/${tmpBptp.log}/`).set({
                         sid: tmpBptp.sid,
                         pid: tmpBptp.pid,
                         intro: '',

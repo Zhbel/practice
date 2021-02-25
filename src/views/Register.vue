@@ -27,11 +27,17 @@
          <div class="ui-text-smaller error" v-if="!$v.fname.required && redmsg == true">Поле ФИО пустое</div>
          <div class="ui-text-smaller error" v-if="!$v.fname.minLength && redmsg == true">Минимальная длина ФИО {{$v.fname.$params.minLength.min}} символов. Сейчас он {{fname.length}}</div>
          <p class="ui-title-5 title">Кафедра</p>
-         <input type="text" placeholder="ВТИК"
+         <input type="text" placeholder="Вычислительная техника и инженерная кибернетика"
          v-model.trim="depart"
          :class="{invalid: ($v.depart.$dirty && !$v.depart.required)}"
          >
          <div class="ui-text-smaller error" v-if="!$v.depart.required && redmsg == true">Поле Кафедра пустое</div>
+         <p class="ui-title-5 title">Аббревиатура кафедры</p>
+         <input type="text" placeholder="ВТИК"
+         v-model.trim="abbr"
+         :class="{invalid: ($v.abbr.$dirty && !$v.abbr.required)}"
+         >
+         <div class="ui-text-smaller error" v-if="!$v.abbr.required && redmsg == true">Поле Аббревиатура пустое</div>
          <button class="button button--round button-primary" type="submit">Зарегистрироваться</button>
     </div>
     </form>
@@ -51,6 +57,7 @@ export default {
       password: '',
       fname: '',
       depart: '',
+      abbr: '',
       ds: ''
     }),
 
@@ -58,7 +65,8 @@ export default {
       login: {required, minLength: minLength(5)},
       password: {required, minLength: minLength(6)},
       fname: {required, minLength: minLength(20)},
-      depart: {required}
+      depart: {required},
+      abbr: {required}
     },
 
     methods: {
@@ -74,7 +82,8 @@ export default {
         login: this.login,
         password: this.password,
         fname: this.fname,
-        depart: this.depart
+        depart: this.depart,
+        abbr: this.abbr
       }
 
       try{

@@ -6,6 +6,7 @@
         </header>
         <div class="content-wrapper">
          <div class="button button-primary ui-messageBox-ok" @click="click">docx</div>
+         <div class="button button-primary ui-messageBox-ok" @click="test">test</div>
         </div>
       </div>
 
@@ -46,6 +47,10 @@ export default {
      },
 
   methods:{
+    async test(){
+      var id = 'prac_oFfgUCjw'
+      await this.$store.dispatch('deleteRefPr', id)
+    },
     click(){
 
             const doc = new Document();

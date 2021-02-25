@@ -39,10 +39,10 @@ export default {
             }
         },
 
-        async updateHead({ commit, dispatch }, { fname, depart }) {
+        async updateHead({ commit, dispatch }, { fname, depart, abbr }) {
             try {
                 const uid = await dispatch('getUid')
-                await firebase.database().ref(`/pHead/`).child(uid).update({ fname, depart })
+                await firebase.database().ref(`/pHead/`).child(uid).update({ fname, depart, abbr })
                     //console.log('updateHead after update')
             } catch (e) {
                 commit('setError', e)

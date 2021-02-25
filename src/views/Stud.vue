@@ -6,7 +6,7 @@
         <div class="content-wrapper">
         
         <div class="ui-card ui-card--shadow-always head">
-          <p class="ui-title-5"><b>ФИО:</b> {{user.fname}}</p>
+          <p class="ui-title-5"><b>ФИО:</b> {{stud.fname}}</p>
           <p class="ui-title-5"><b>Группа:</b> {{group.title}}</p>
         </div>
         <label class="ui-title-4 center">Мои работы</label>
@@ -56,49 +56,39 @@
 </template>
 
 <script>
+import { format, parse } from "date-fns";
+
 export default {
     data: () => ({
-        user: '',
+        stud: '',
         group: '',
         prac: [],
         heads: [],
         edlvls: [],
+        selprac: [],
         tmpdir: {
-        practype: '',
-        pid: '',
-        sid: '',
-        pracbase: '',
-        city: '',
-        order: '',
-        orderdate: '',
-        contractNum: '',
-        contractDate: '',
-        refNum: '',
-        univYear: '',
-        pracHead: '',
-        dean: '',
-        prodObj: '',
-        theme: '',
-        listMat: '',
-        listGraph: '',
-        pracResult: '',
-        pracTaskRes: '',
-        studChar: '',
-        comment: '',
-        recomend: ''
-        },
+                  login: '',
+                  practype: '',
+                  pid: '',
+                  sid: '',
+                },
+        
         loadPrac: false,
         openPracBox: false,
+        format: 'dd_MM_yyyy',
+        practable: '',
         currentPrac: '',
         textinfo: '',
         loadPrac: false
     }),
     
     async mounted(){
-       this.user = await this.$store.dispatch('getStudId'),
+       var sid = await this.$store.dispatch('getUid')
+       this.stud = await this.$store.dispatch('getStudId'),
+       Object.assign(this.stud, {id: sid});
        //console.log(this.user)
-       this.group = await this.$store.dispatch('getGroupById', this.user.grid)
-       this.prac = await this.$store.dispatch('getPracGr', this.user.grid)
+       this.group = await this.$store.dispatch('getGroupById', this.stud.grid)
+       this.prac = await this.$store.dispatch('getPracGr', this.stud.grid)
        this.heads = await this.$store.dispatch('getHeads')
        this.edlvls = await this.$store.dispatch('getPracList')
         //console.log(this.stud)
@@ -110,6 +100,22 @@ export default {
      },
 
      methods:{
+
+        toDate (dateStr) {
+        const [day, month, year] = dateStr.split(".")
+        return new Date(year, month - 1, day)
+        },
+
+        customFormatter(date) {
+        //const moment = require('moment')
+        return format(date, this.format)
+        //return moment(date).format('DD-MM-yyyy');
+        },
+
+        customParser(date) {
+          return parse(date, this.format, new Date())
+        },
+
         filterHead(pHead){
         return this.heads.filter( head => {
           return head.id == pHead
@@ -117,25 +123,255 @@ export default {
        },
 
          openDirect(prac){
-
+           this.$router.push('/Ref?prac=' + prac.id + '&stud=' + this.stud.login)
         },
 
-       async openRep(prac){
-        var edlevel = this.group.edlvl
-        var uid = await this.$store.dispatch('getUid')
-        alert('load from ' +
-          (this.edlvls.find(edlvl => edlvl.title == prac.type && edlvl.edlvl == edlevel)).tablename + ' query ' + prac.id + ' stud ' + uid)
+        async openRep(prac){
+        //var id = prac.id + '_' + this.stud.login
+        var edlevel = (await this.$store.dispatch('getGroupById', this.stud.grid)).edlvl
+        var tablename = (this.edlvls.find(edlvl => edlvl.title == prac.type && edlvl.edlvl == edlevel)).tablename
+        //console.log(tablename)
+
+
+        switch (tablename) {
+              case 'pracAnip':
+                this.$router.push('/rep/anip?prac=' + prac.id + '&stud=' + this.stud.login)
+                break;
+              case 'pracAni':
+                this.$router.push('/rep/ani?prac=' + prac.id + '&stud=' + this.stud.login)
+                break;
+              case 'pracApp':
+                this.$router.push('/rep/app?prac=' + prac.id + '&stud=' + this.stud.login)
+               // console.log('switch pracApp')
+
+                break;
+              case 'pracByop':
+                this.$router.push('/rep/byop?prac=' + prac.id + '&stud=' + this.stud.login)
+               // console.log('switch pracByop')
+
+                break;
+              case 'pracByNIR':
+                this.$router.push('/rep/byNIR?prac=' + prac.id + '&stud=' + this.stud.login)
+               // console.log('switch pracByNIR')
+
+                break;
+              case 'pracBptp':
+                this.$router.push('/rep/bptp?prac=' + prac.id + '&stud=' + this.stud.login)
+               // console.log('switch pracBptp')
+
+                break;
+              case 'pracBpdp':
+                this.$router.push('/rep/bpdp?prac=' + prac.id + '&stud=' + this.stud.login)
+               // console.log('switch pracBpdp')
+                break;
+              case 'pracMyop':
+               // console.log('switch pracMyop')
+               this.$router.push('/rep/myop?prac=' + prac.id + '&stud=' + this.stud.login)
+
+                break;
+              case 'pracMpNIR':
+               // console.log('switch pracMpNIR')
+               this.$router.push('/rep/mpNIR?prac=' + prac.id + '&stud=' + this.stud.login)
+
+                break;
+              case 'pracMptp':
+               // console.log('switch pracMptp')
+               this.$router.push('/rep/mptp?prac=' + prac.id + '&stud=' + this.stud.login)
+
+                break;
+              default:
+                console.log('switch default')
+                break;
+            }
+
+        //alert('load from ' +
+          //(this.edlvls.find(edlvl => edlvl.title == prac.type && edlvl.edlvl == edlevel)).tablename + ' query ' + id)
+        
+        
+        
         },
 
-        openDiary(prac){
+        async openDiary(prac){
+            var pid = prac.id
+            var sid = this.stud.login
+            var getPd = await this.$store.dispatch('getPd', {pid, sid})
 
+            if(Object.keys(getPd) != 0){
+              this.$router.push('/pd?prac=' + prac.id + '&stud=' + this.stud.login)
+            }
+            else{
+           var datetest = [];
+            var tmp = this.toDate(this.currentPrac.datestart)
+
+            while(tmp <= this.toDate(this.currentPrac.dateend)){
+              //console.log(tmp)
+              datetest.push(this.customFormatter(tmp))
+              tmp.setDate(tmp.getDate() + 1)
+            }
+
+            datetest.forEach(async date => {
+            
+            await this.$store.dispatch('addPd', {pid, sid, date})
+          });
+          this.$router.push('/pd?prac=' + prac.id + '&stud=' + this.stud.login)
+        }
         },
 
-        openPrac(prac){
+        async openPrac(prac){
+          try{
           this.currentPrac = this.prac.find(pract => pract.id == prac.id)
+
+          
+          var pid = prac.id
+          var sid = this.stud.login
+          this.selprac = await this.$store.dispatch('getRefById', { pid, sid})
+
+         
+
+           //console.log(prac.id)
+           //console.log(sid)
+
+
+         //console.log(this.selprac)
+
+        // console.log(Object.keys(this.selprac))
+
+          if(Object.keys(this.selprac) != 0){
+           // console.log('joined if')
+            this.openPracBox = true
+          } else{
+           //console.log('joined else')
+            this.tmpdir.login = this.stud.login
+            this.tmpdir.practype = prac.type
+            this.tmpdir.pid = prac.id
+            this.tmpdir.sid = this.stud.id
+           
+            //console.log(this.tmpdir)
+            await this.$store.dispatch('addRef', this.tmpdir)
+            var edlevel = (await this.$store.dispatch('getGroupById', this.stud.grid)).edlvl
+            this.practable = this.edlvls.find(edlvl => edlvl.title == prac.type && edlvl.edlvl == edlevel).tablename
+
+             switch (this.practable) {
+              case 'pracAnip':
+               // console.log('switch pracAnip')
+                var tmpAnip = {
+                  log: this.stud.login,
+                  pid: prac.id,
+                  sid: this.stud.id,
+                }
+                await this.$store.dispatch('addAnip', tmpAnip)
+                break;
+              case 'pracAni':
+               // console.log('switch pracAni')
+                var tmpAni = {
+                  log: this.stud.login,
+                  pid: prac.id,
+                  sid: this.stud.id,
+                }
+                await this.$store.dispatch('addAni', tmpAni)
+                break;
+              case 'pracApp':
+               // console.log('switch pracApp')
+                var tmpApp = {
+                  log: this.stud.login,
+                  pid: prac.id,
+                  sid: this.stud.id,
+                }
+                await this.$store.dispatch('addApp', tmpApp)
+                break;
+              case 'pracByop':
+               // console.log('switch pracByop')
+                var tmpByop = {
+                  log: this.stud.login,
+                  pid: prac.id,
+                  sid: this.stud.id,
+                }
+                await this.$store.dispatch('addByop', tmpByop)
+                break;
+              case 'pracByNIR':
+               // console.log('switch pracByNIR')
+                var tmpByNIR = {
+                  log: this.stud.login,
+                  pid: prac.id,
+                  sid: this.stud.id,
+                }
+                await this.$store.dispatch('addByNIR', tmpByNIR)
+                break;
+              case 'pracBptp':
+               // console.log('switch pracBptp')
+                var tmpBptp = {
+                  log: this.stud.login,
+                  pid: prac.id,
+                  sid: this.stud.id,
+                }
+                await this.$store.dispatch('addBptp', tmpBptp)
+                break;
+              case 'pracBpdp':
+               // console.log('switch pracBpdp')
+                var tmpBpdp = {
+                  log: this.stud.login,
+                  pid: prac.id,
+                  sid: this.stud.id,
+                }
+                await this.$store.dispatch('addBpdp', tmpBpdp)
+                break;
+              case 'pracMyop':
+               // console.log('switch pracMyop')
+                var tmpMyop = {
+                  log: this.stud.login,
+                  pid: prac.id,
+                  sid: this.stud.id,
+                }
+                await this.$store.dispatch('addMyop', tmpMyop)
+                break;
+              case 'pracMpNIR':
+               // console.log('switch pracMpNIR')
+                var tmpMpNIR = {
+                  log: this.stud.login,
+                  pid: prac.id,
+                  sid: this.stud.id,
+                }
+                await this.$store.dispatch('addMpNIR', tmpMpNIR)
+                break;
+              case 'pracMptp':
+               // console.log('switch pracMptp')
+                var tmpMptp = {
+                  log: this.stud.login,
+                  pid: prac.id,
+                  sid: this.stud.id,
+                }
+                await this.$store.dispatch('addMptp', tmpMptp)
+                break;
+              default:
+                console.log('switch default')
+                break;
+            }
+
+            
+            this.tmpdir = {
+                  id: '',
+                  practype: '',
+                  pid: '',
+                  sid: '',
+                },
+            this.openPracBox = true
+          }
+
+          
+          
+          //console.log(this.practable)
+
+         
+
+
+          //console.log(this.practable)
           //console.log(this.currentPrac)
           //  alert(prac.id)
-          this.openPracBox = true
+          
+          }
+          catch (e){
+
+          }
         },
         
         closePrac(){

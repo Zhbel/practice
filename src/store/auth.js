@@ -10,7 +10,7 @@ export default {
                 throw e
             }
         },
-        async registerHead({ dispatch, commit }, { login, password, fname, depart }) {
+        async registerHead({ dispatch, commit }, { login, password, fname, depart, abbr }) {
             try {
                 await firebase.auth().createUserWithEmailAndPassword(login + '@practice.vtik', password)
                     //console.log('reghead')
@@ -22,6 +22,7 @@ export default {
                     password: password,
                     fname: fname,
                     depart: depart,
+                    abbr: abbr,
                     ds: ''
                 })
             } catch (e) {

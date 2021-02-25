@@ -192,7 +192,9 @@ export default {
       format: 'dd.MM.yyyy',
       grTitle: '',
       textinfo: '',
+      practable: '',
       currentEdlvl: '',
+      edprac: '',
       tmpp: {
         pid: '',
         grid: '',
@@ -293,6 +295,7 @@ export default {
       this.tmpp.datestart = this.toDate(prac.datestart)
       this.tmpp.dateend = this.toDate(prac.dateend)
       this.EditButton = true
+      this.edprac = prac
 
       //this.studT = student
     },
@@ -309,18 +312,22 @@ export default {
         dateend: '',
         id: '',
       }
+      this.edprac = ''
     },
     
     async finishEdit(){
        try{
+        
         this.tmpp.datestart = this.customFormatter(this.tmpp.datestart)
         this.tmpp.dateend = this.customFormatter(this.tmpp.dateend)
+        if(this.tmpp.datestart != this.edprac.datestart || this.tmpp.dateend != this.edprac.dateend){
+          //console.log('date changed')
+          await this.$store.dispatch('deletePd', this.edprac.id)
+        }
         await this.$store.dispatch('UpdatePrac', this.tmpp)
         this.prac = await this.$store.dispatch('getPracGr', this.currentGr),
         this.$success('Данные успешно обновлены')
-        this.cancelEdit()
-        
-        
+        this.cancelEdit()  
       }catch (e){
         this.$error('Ошибка при обновлении данных')
       }

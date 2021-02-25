@@ -3,9 +3,9 @@ import firebase from 'firebase/app'
 export default {
     actions: {
         //Бакалавриат
-        async getByopByID({ commit, dispatch }, id) {
+        async getByopByID({ commit, dispatch }, { pid, sid }) {
             try {
-                const rep = (await firebase.database().ref(`/pracByop/${id}/`).once('value')).val() || {}
+                const rep = (await firebase.database().ref(`/pracByop/${pid}/${sid}/`).once('value')).val() || {}
                 return rep
             } catch (e) {
                 commit('setError', e)
@@ -13,9 +13,9 @@ export default {
             }
         },
 
-        async UpdateByop({ commit, dispatch }, { id, conclusion, dataCodeTask, programmingTask, taskResults }) {
+        async UpdateByop({ commit, dispatch }, { pid, log, conclusion, dataCodeTask, programmingTask, taskResults }) {
             try {
-                await firebase.database().ref(`/pracByop/`).child(id).update({ conclusion, dataCodeTask, programmingTask, taskResults })
+                await firebase.database().ref(`/pracByop/${pid}/`).child(log).update({ conclusion, dataCodeTask, programmingTask, taskResults })
                 console.log('updateByop')
             } catch (e) {
                 commit('setError', e)
@@ -23,9 +23,9 @@ export default {
             }
         },
 
-        async getByNIRByID({ commit, dispatch }, id) {
+        async getByNIRByID({ commit, dispatch }, { pid, sid }) {
             try {
-                const rep = (await firebase.database().ref(`/pracByNIR/${id}/`).once('value')).val() || {}
+                const rep = (await firebase.database().ref(`/pracByNIR/${pid}/${sid}/`).once('value')).val() || {}
                 return rep
             } catch (e) {
                 commit('setError', e)
@@ -33,9 +33,9 @@ export default {
             }
         },
 
-        async UpdateByNIR({ commit, dispatch }, { id, conclusion, dataCodeTask, programmingTask, taskResults }) {
+        async UpdateByNIR({ commit, dispatch }, { pid, log, conclusion, dataCodeTask, programmingTask, taskResults }) {
             try {
-                await firebase.database().ref(`/pracByNIR/`).child(id).update({ conclusion, dataCodeTask, programmingTask, taskResults })
+                await firebase.database().ref(`/pracByNIR/${pid}/`).child(log).update({ conclusion, dataCodeTask, programmingTask, taskResults })
                 console.log('updateByNIR')
             } catch (e) {
                 commit('setError', e)
@@ -43,9 +43,9 @@ export default {
             }
         },
 
-        async getBptpByID({ commit, dispatch }, id) {
+        async getBptpByID({ commit, dispatch }, { pid, sid }) {
             try {
-                const rep = (await firebase.database().ref(`/pracBptp/${id}/`).once('value')).val() || {}
+                const rep = (await firebase.database().ref(`/pracBptp/${pid}/${sid}/`).once('value')).val() || {}
                 return rep
             } catch (e) {
                 commit('setError', e)
@@ -53,9 +53,9 @@ export default {
             }
         },
 
-        async UpdateBptp({ commit, dispatch }, { id, baseChar, equipChar, intro, progChar, result }) {
+        async UpdateBptp({ commit, dispatch }, { pid, log, baseChar, equipChar, intro, progChar, result }) {
             try {
-                await firebase.database().ref(`/pracBptp/`).child(id).update({ baseChar, equipChar, intro, progChar, result })
+                await firebase.database().ref(`/pracBptp/${pid}/`).child(log).update({ baseChar, equipChar, intro, progChar, result })
                 console.log('updateBptp')
             } catch (e) {
                 commit('setError', e)
@@ -63,9 +63,9 @@ export default {
             }
         },
 
-        async getBpdpByID({ commit, dispatch }, id) {
+        async getBpdpByID({ commit, dispatch }, { pid, sid }) {
             try {
-                const rep = (await firebase.database().ref(`/pracBpdp/${id}/`).once('value')).val() || {}
+                const rep = (await firebase.database().ref(`/pracBpdp/${pid}/${sid}/`).once('value')).val() || {}
                 return rep
             } catch (e) {
                 commit('setError', e)
@@ -73,9 +73,9 @@ export default {
             }
         },
 
-        async UpdateBpdp({ commit, dispatch }, { id, baseChar, intro, taskResults, usedRes }) {
+        async UpdateBpdp({ commit, dispatch }, { pid, log, baseChar, intro, taskResults, usedRes }) {
             try {
-                await firebase.database().ref(`/pracBpdp/`).child(id).update({ baseChar, intro, taskResults, usedRes })
+                await firebase.database().ref(`/pracBpdp/${pid}/`).child(log).update({ baseChar, intro, taskResults, usedRes })
                 console.log('updateBpdp')
             } catch (e) {
                 commit('setError', e)
@@ -86,9 +86,9 @@ export default {
 
         //Magistr
 
-        async getMyopByID({ commit, dispatch }, id) {
+        async getMyopByID({ commit, dispatch }, { pid, sid }) {
             try {
-                const rep = (await firebase.database().ref(`/pracMyop/${id}/`).once('value')).val() || {}
+                const rep = (await firebase.database().ref(`/pracMyop/${pid}/${sid}/`).once('value')).val() || {}
                 return rep
             } catch (e) {
                 commit('setError', e)
@@ -96,9 +96,9 @@ export default {
             }
         },
 
-        async UpdateMyop({ commit, dispatch }, { id, conclusion, dataCodeTask, programmingTask, taskResults }) {
+        async UpdateMyop({ commit, dispatch }, { pid, log, conclusion, dataCodeTask, programmingTask, taskResults }) {
             try {
-                await firebase.database().ref(`/pracMyop/`).child(id).update({ conclusion, dataCodeTask, programmingTask, taskResults })
+                await firebase.database().ref(`/pracMyop/${pid}/`).child(log).update({ conclusion, dataCodeTask, programmingTask, taskResults })
                 console.log('updateMyop')
             } catch (e) {
                 commit('setError', e)
@@ -106,9 +106,9 @@ export default {
             }
         },
 
-        async getMpNIRByID({ commit, dispatch }, id) {
+        async getMpNIRByID({ commit, dispatch }, { pid, sid }) {
             try {
-                const rep = (await firebase.database().ref(`/pracMpNIR/${id}/`).once('value')).val() || {}
+                const rep = (await firebase.database().ref(`/pracMpNIR/${pid}/${sid}/`).once('value')).val() || {}
                 return rep
             } catch (e) {
                 commit('setError', e)
@@ -116,9 +116,9 @@ export default {
             }
         },
 
-        async UpdateMpNIR({ commit, dispatch }, { id, conclusion, dataCodeTask, programmingTask, taskResults }) {
+        async UpdateMpNIR({ commit, dispatch }, { pid, log, conclusion, dataCodeTask, programmingTask, taskResults }) {
             try {
-                await firebase.database().ref(`/pracMpNIR/`).child(id).update({ conclusion, dataCodeTask, programmingTask, taskResults })
+                await firebase.database().ref(`/pracMpNIR/${pid}/`).child(log).update({ conclusion, dataCodeTask, programmingTask, taskResults })
                 console.log('updateMpNIR')
             } catch (e) {
                 commit('setError', e)
@@ -126,9 +126,9 @@ export default {
             }
         },
 
-        async getMptpByID({ commit, dispatch }, id) {
+        async getMptpByID({ commit, dispatch }, { pid, sid }) {
             try {
-                const rep = (await firebase.database().ref(`/pracMptp/${id}/`).once('value')).val() || {}
+                const rep = (await firebase.database().ref(`/pracMptp/${pid}/${sid}/`).once('value')).val() || {}
                 return rep
             } catch (e) {
                 commit('setError', e)
@@ -136,9 +136,9 @@ export default {
             }
         },
 
-        async UpdateMptp({ commit, dispatch }, { id, baseChar, equipChar, intro, progChar, result }) {
+        async UpdateMptp({ commit, dispatch }, { pid, log, baseChar, equipChar, intro, progChar, result }) {
             try {
-                await firebase.database().ref(`/pracMptp/`).child(id).update({ baseChar, equipChar, intro, progChar, result })
+                await firebase.database().ref(`/pracMptp/${pid}/`).child(log).update({ baseChar, equipChar, intro, progChar, result })
                 console.log('updateBptp')
             } catch (e) {
                 commit('setError', e)
@@ -149,9 +149,9 @@ export default {
 
         //ASS
 
-        async getAnipByID({ commit, dispatch }, id) {
+        async getAnipByID({ commit, dispatch }, { pid, sid }) {
             try {
-                const rep = (await firebase.database().ref(`/pracAnip/${id}/`).once('value')).val() || {}
+                const rep = (await firebase.database().ref(`/pracAnip/${pid}/${sid}/`).once('value')).val() || {}
                 return rep
             } catch (e) {
                 commit('setError', e)
@@ -159,9 +159,9 @@ export default {
             }
         },
 
-        async UpdateAnip({ commit, dispatch }, { id, conclusion, personalTask, placeDesc, pracBase, pracHead, researchArea, usedLit, usedPubl, usedRes }) {
+        async UpdateAnip({ commit, dispatch }, { pid, log, conclusion, personalTask, placeDesc, pracBase, pracHead, researchArea, usedLit, usedPubl, usedRes }) {
             try {
-                await firebase.database().ref(`/pracAnip/`).child(id).update({ conclusion, personalTask, placeDesc, pracBase, pracHead, researchArea, usedLit, usedPubl, usedRes })
+                await firebase.database().ref(`/pracAnip/${pid}/`).child(log).update({ conclusion, personalTask, placeDesc, pracBase, pracHead, researchArea, usedLit, usedPubl, usedRes })
                 console.log('updateAnip')
             } catch (e) {
                 commit('setError', e)
@@ -169,9 +169,9 @@ export default {
             }
         },
 
-        async getAniByID({ commit, dispatch }, id) {
+        async getAniByID({ commit, dispatch }, { pid, sid }) {
             try {
-                const rep = (await firebase.database().ref(`/pracAni/${id}/`).once('value')).val() || {}
+                const rep = (await firebase.database().ref(`/pracAni/${pid}/${sid}/`).once('value')).val() || {}
                 return rep
             } catch (e) {
                 commit('setError', e)
@@ -179,9 +179,9 @@ export default {
             }
         },
 
-        async UpdateAni({ commit, dispatch }, { id, conf, halfyear, other, publicW, review, workbefore }) {
+        async UpdateAni({ commit, dispatch }, { pid, log, conf, halfyear, other, publicW, review, workbefore }) {
             try {
-                await firebase.database().ref(`/pracAni/`).child(id).update({ conf, halfyear, other, publicW, review, workbefore })
+                await firebase.database().ref(`/pracAni/${pid}/`).child(log).update({ conf, halfyear, other, publicW, review, workbefore })
                 console.log('updateAni')
             } catch (e) {
                 commit('setError', e)
@@ -189,9 +189,9 @@ export default {
             }
         },
 
-        async getAppByID({ commit, dispatch }, id) {
+        async getAppByID({ commit, dispatch }, { pid, sid }) {
             try {
-                const rep = (await firebase.database().ref(`/pracApp/${id}/`).once('value')).val() || {}
+                const rep = (await firebase.database().ref(`/pracApp/${pid}/${sid}/`).once('value')).val() || {}
                 return rep
             } catch (e) {
                 commit('setError', e)
@@ -199,9 +199,9 @@ export default {
             }
         },
 
-        async UpdateApp({ commit, dispatch }, { id, PTparts, conclusion, edProg, personalTask, placeDesc, usedEd }) {
+        async UpdateApp({ commit, dispatch }, { pid, log, PTparts, conclusion, edProg, personalTask, placeDesc, usedEd }) {
             try {
-                await firebase.database().ref(`/pracApp/`).child(id).update({ PTparts, conclusion, edProg, personalTask, placeDesc, usedEd })
+                await firebase.database().ref(`/pracApp/${pid}/`).child(log).update({ PTparts, conclusion, edProg, personalTask, placeDesc, usedEd })
                 console.log('updateApp')
             } catch (e) {
                 commit('setError', e)
