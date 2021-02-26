@@ -53,9 +53,9 @@ export default {
             }
         },
 
-        async UpdateBptp({ commit, dispatch }, { pid, log, baseChar, equipChar, intro, progChar, result }) {
+        async UpdateBptp({ commit, dispatch }, { pid, log, baseChar, equipChar, intro, progChar, result, usedRes }) {
             try {
-                await firebase.database().ref(`/pracBptp/${pid}/`).child(log).update({ baseChar, equipChar, intro, progChar, result })
+                await firebase.database().ref(`/pracBptp/${pid}/`).child(log).update({ baseChar, equipChar, intro, progChar, result, usedRes })
                 console.log('updateBptp')
             } catch (e) {
                 commit('setError', e)
@@ -136,9 +136,9 @@ export default {
             }
         },
 
-        async UpdateMptp({ commit, dispatch }, { pid, log, baseChar, equipChar, intro, progChar, result }) {
+        async UpdateMptp({ commit, dispatch }, { pid, log, baseChar, equipChar, intro, progChar, result, usedRes }) {
             try {
-                await firebase.database().ref(`/pracMptp/${pid}/`).child(log).update({ baseChar, equipChar, intro, progChar, result })
+                await firebase.database().ref(`/pracMptp/${pid}/`).child(log).update({ baseChar, equipChar, intro, progChar, result, usedRes })
                 console.log('updateBptp')
             } catch (e) {
                 commit('setError', e)

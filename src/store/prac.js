@@ -42,15 +42,54 @@ export default {
             }
         },
 
-        async UpdatePracList({ commit, dispatch }, { id, title }) {
+        async getPracListById({ commit, dispatch }, id) {
             try {
-                await firebase.database().ref(`/pracList/`).child(id).update({ title })
+                const p = (await firebase.database().ref(`/pracList/${id}/`).once('value')).val() || {}
+                return p
+            } catch (e) {
+                commit('setError', e)
+                throw e
+            }
+        },
+
+        async getPList({ commit, dispatch }) {
+            try {
+                const p = (await firebase.database().ref(`/prac/`).once('value')).val() || {}
+                return Object.keys(p).map(key => ({...p[key], id: key }))
+            } catch (e) {
+                commit('setError', e)
+                throw e
+            }
+        },
+
+        async UpdatePracList({ commit, dispatch }, newT) {
+            try {
+                //console.log(newT)
+                var old = await dispatch('getPracListById', newT.id)
+
+                //console.log(old)
+                const p = await dispatch('getPList')
+                    //console.log(p)
+                p.forEach(async pr => {
+                    //console.log(pr)
+                    if (pr.type == old.title) {
+                        //console.log(pr.id)
+                        var gr = await dispatch('getGroupById', pr.grid)
+                        if (gr.edlvl == newT.edlvl) {
+                            pr.type = newT.title
+                            await dispatch('UpdatePrac', pr)
+                        }
+                    }
+                });
+                await firebase.database().ref(`/pracList/`).child(newT.id).update({ title: newT.title })
                 console.log('updatePracList')
             } catch (e) {
                 commit('setError', e)
                 throw e
             }
         },
+
+
 
         async deletePrac({ commit, dispatch }, id) {
             try {

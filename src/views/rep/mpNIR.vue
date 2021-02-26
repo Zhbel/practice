@@ -5,7 +5,7 @@
         <header>
         </header>
         <div class="content-wrapper">
-          <p class="ui-title-4 center">Производственная НИР: Отчет</p>
+          <p class="ui-title-4 center">{{prac.type}}: Отчет</p>
           <p class="ui-title-4 center">{{student.fname}}</p>
           <p>Программирование:</p>
           <textarea v-model="report.programmingTask" class="textarea"></textarea>

@@ -264,6 +264,7 @@ export default {
 
     pracList(){
       this.showList = true
+      //console.log(this.currentEdlvl)
       this.currentEdlvl = ''
     },
 
@@ -274,9 +275,14 @@ export default {
 
     async finishList(){
       try{
-        console.log(this.currentEdlvl)
+        
+        //var oldpracname = this.currentEdlvl.title
+        //console.log(oldpracname)
         await this.$store.dispatch('UpdatePracList', this.currentEdlvl)
         this.edlvls = await this.$store.dispatch('getPracList')
+        if(this.currentGr != ''){
+        this.prac = await this.$store.dispatch('getPracGr', this.currentGr)
+        }
         this.$success('Данные успешно обновлены')
         this.cancelList()
                 

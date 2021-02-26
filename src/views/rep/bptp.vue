@@ -5,7 +5,7 @@
         <header>
         </header>
         <div class="content-wrapper">
-          <p class="ui-title-4 center">Производственно-технологическая практика: Отчет</p>
+          <p class="ui-title-4 center">{{prac.type}}: Отчет</p>
           <p class="ui-title-4 center">{{student.fname}}</p>
           <p>Введение:</p>
           <textarea v-model="report.intro" class="textarea"></textarea>
@@ -15,8 +15,10 @@
           <textarea v-model="report.equipChar" class="textarea"></textarea>
           <p>Используемые программные продукты:</p>
           <textarea v-model="report.progChar" class="textarea"></textarea>
-          <p>Результат выполнения индивидуальных заданий:</p>
+          <p>Результаты выполнения индивидуальных заданий:</p>
           <textarea v-model="report.result" class="textarea"></textarea>
+          <p>Используемые источники:</p>
+          <textarea v-model="report.usedRes" class="textarea"></textarea>
           <div class="row">
           <div class="button button-primary" @click="saveRep">Сохранить</div>
           <div class="button button-light doc" @click="createDoc">Создать документ</div>
@@ -82,7 +84,7 @@ export default {
 
         //console.log(this.splitLines(this.report.intro))
 
-        //console.log(this.report)
+        // console.log(this.report)
         //console.log(this.group)
         //console.log(this.prac)
         //console.log(this.ref)
@@ -134,6 +136,26 @@ export default {
         });
       },
 
+      createLitLine(text) {
+        return new Paragraph({
+            spacing: {
+                            line: 360,
+                        },
+                  alignment: AlignmentType.JUSTIFIED,
+                  //keepNext: true,
+                  //keepLines: true,
+                  children: [
+                    new TextRun( {
+                    text: text,
+                    bold: false,
+                    font: "Times New Roman",
+                    size: 28,
+                    //break: 1,
+                    }),
+                  ],
+        });
+      },
+
 
         async saveRep(){
 
@@ -148,7 +170,7 @@ export default {
 
         createDoc(){
 
-          if(this.report.baseChar == "" || this.report.equipChar == "" || this.report.intro == "" || this.report.progChar == "" || this.report.result == ""){
+          if(this.report.baseChar == "" || this.report.equipChar == "" || this.report.intro == "" || this.report.progChar == "" || this.report.result == "" || this.report.usedRes == ""){
             this.$message("Заполните все поля перед созданием документа")
             return
           }
@@ -222,21 +244,28 @@ export default {
                   break: 1,
                   }),
 
+                  // new TextRun( {
+                  // text: "(практика по получению профессиональных умений",
+                  // bold: false,
+                  // font: "Times New Roman",
+                  // size: 28,
+                  // break: 1,
+                  // }),
+
+                  // new TextRun( {
+                  // text: "и опыта профессиональной деятельности)",
+                  // bold: false,
+                  // font: "Times New Roman",
+                  // size: 28,
+                  // break: 1,
+                  // })
                   new TextRun( {
-                  text: "(практика по получению профессиональных умений",
+                  text: "(тип: " + this.prac.type.toLowerCase() + ")",
                   bold: false,
                   font: "Times New Roman",
                   size: 28,
                   break: 1,
                   }),
-
-                  new TextRun( {
-                  text: "и опыта профессиональной деятельности)",
-                  bold: false,
-                  font: "Times New Roman",
-                  size: 28,
-                  break: 1,
-                  })
                   ],
                  
             });
@@ -251,7 +280,7 @@ export default {
                   //rightTabStop: '2000',
                   children: [
                     new TextRun( {
-                    text: "Студент гр. " + this.group.title + "\t\t___________________________ " + this.short_sname,
+                    text: "Студент гр. " + this.group.title + "\t\t_________________________ " + this.short_sname,
                     bold: false,
                     font: "Times New Roman",
                     size: 28,
@@ -291,7 +320,7 @@ export default {
                     }),
 
                     new TextRun( {
-                    text: "Руководитель практики\t\t" + "___________________________",
+                    text: "Руководитель практики\t\t" + "_________________________",
                     bold: false,
                     font: "Times New Roman",
                     size: 28,
@@ -314,7 +343,7 @@ export default {
                     }),
 
                     new TextRun( {
-                    text: "\t\t\t\t\t___________________________ " + this.initials(this.ref.pracHead),
+                    text: "\t\t\t\t\t_________________________ " + this.initials(this.ref.pracHead),
                     bold: false,
                     font: "Times New Roman",
                     size: 28,
@@ -338,7 +367,7 @@ export default {
                     }),
 
                     new TextRun( {
-                    text: "от кафедры " + this.head.abbr + "\t\t___________________________ " + this.short_hname,
+                    text: "от кафедры " + this.head.abbr + "\t\t_________________________ " + this.short_hname,
                     bold: false,
                     font: "Times New Roman",
                     size: 28,
@@ -367,7 +396,7 @@ export default {
                     bold: false,
                     font: "Times New Roman",
                     size: 28,
-                    break: 4,
+                    break: 5,
                     }),
                   ]
             });
@@ -395,6 +424,7 @@ export default {
                             after: 200,
                         },
                   alignment: AlignmentType.CENTER,
+                  pageBreakBefore: true,
                   children: [
                     new TextRun( {
                     text: 'ВВЕДЕНИЕ',
@@ -405,6 +435,130 @@ export default {
                     }),
                   ]
             });
+
+            const contenth = new Paragraph({
+                  spacing: {
+                            line: 360,
+                            after: 200,
+                        },
+                  alignment: AlignmentType.CENTER,
+                  children: [
+                    new TextRun( {
+                    text: 'СОДЕРЖАНИЕ',
+                    bold: false,
+                    font: "Times New Roman",
+                    size: 28,
+                    //break: 1,
+                    }),
+                    ]
+            });
+
+            const content = new Paragraph({
+                  spacing: {
+                            line: 360,
+                        },
+                  alignment: AlignmentType.JUSTIFIED,
+                  children: [
+                     new TextRun( {
+                    text: 'Введение',
+                    bold: false,
+                    font: "Times New Roman",
+                    size: 28,
+                    //break: 1,
+                    }),
+                    new TextRun( {
+                    text: '1  Характеристика предприятия',
+                    bold: false,
+                    font: "Times New Roman",
+                    size: 28,
+                    break: 1,
+                    }),
+                    new TextRun( {
+                    text: '2  Характеристика оборудования',
+                    bold: false,
+                    font: "Times New Roman",
+                    size: 28,
+                    break: 1,
+                    }),
+                    new TextRun( {
+                    text: '3  Используемые программные продукты',
+                    bold: false,
+                    font: "Times New Roman",
+                    size: 28,
+                    break: 1,
+                    }),
+                    new TextRun( {
+                    text: '4  Результаты выполнения индивидуальных заданий',
+                    bold: false,
+                    font: "Times New Roman",
+                    size: 28,
+                    break: 1,
+                    }),
+                    new TextRun( {
+                    text: 'Список использованных источников',
+                    bold: false,
+                    font: "Times New Roman",
+                    size: 28,
+                    break: 1,
+                    }),
+                    new TextRun( {
+                    text: 'Приложение A (обязательное). Дневник практики',
+                    bold: false,
+                    font: "Times New Roman",
+                    size: 28,
+                    break: 1,
+                    }),
+                    ]
+            });
+
+            const lith = new Paragraph({
+                  spacing: {
+                            line: 360,
+                            after: 200,
+                        },
+                  alignment: AlignmentType.CENTER,
+                  pageBreakBefore: true,
+                  children: [
+                    new TextRun( {
+                    text: 'СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ',
+                    bold: false,
+                    font: "Times New Roman",
+                    size: 28,
+                    //break: 1,
+                    }),
+                    ]
+            });
+
+            // const lit = new Paragraph({
+            //       spacing: {
+            //                 line: 360,
+            //             },
+            //       alignment: AlignmentType.JUSTIFIED,
+            //       children: [
+            //         new TextRun( {
+            //         text: '1',
+            //         bold: false,
+            //         font: "Times New Roman",
+            //         size: 28,
+            //         }),
+            //         new TextRun( {
+            //         text: '2',
+            //         bold: false,
+            //         font: "Times New Roman",
+            //         size: 28,
+            //         break: 1,
+            //         }),
+            //         new TextRun( {
+            //         text: '3',
+            //         bold: false,
+            //         font: "Times New Roman",
+            //         size: 28,
+            //         break: 1,
+            //         }),
+            //         ]
+            // });
+
+           
 
             const baseCharh = new Paragraph({
                   spacing: {
@@ -469,7 +623,7 @@ export default {
                   alignment: AlignmentType.LEFT,
                   children: [
                     new TextRun( {
-                    text: '\t4\tРезультат выполнения индивидуальных заданий',
+                    text: '\t4\tРезультаты выполнения индивидуальных заданий',
                     bold: false,
                     font: "Times New Roman",
                     size: 28,
@@ -485,7 +639,9 @@ export default {
             let equipChar = this.splitLines(this.report.equipChar)
             let progChar = this.splitLines(this.report.progChar)
             let result = this.splitLines(this.report.result)
+            let lit = this.splitLines(this.report.usedRes)
 
+            //console.log(lit)
             doc.addSection({
             margins: {
             top: 850,
@@ -518,6 +674,9 @@ export default {
             },
 
             children: [
+                    contenth,
+                    content,
+
                     introh,
                     ...intro
                     .map((string) => {
@@ -578,6 +737,19 @@ export default {
                         //console.log(bulletPoints)
                         bulletPoints.forEach((bulletPoint) => {
                             arr.push(this.createTextLine(bulletPoint));
+                        });
+                        //console.log(arr)
+                        return arr;
+                    })  .reduce((prev, curr) => prev.concat(curr), []),
+
+                    lith,
+                    ...lit
+                    .map((string) => {
+                        const arr = [];
+                        const bulletPoints = this.splitParagraphIntoStrings(string);
+                        //console.log(bulletPoints)
+                        bulletPoints.forEach((bulletPoint) => {
+                            arr.push(this.createLitLine(bulletPoint));
                         });
                         //console.log(arr)
                         return arr;

@@ -114,7 +114,8 @@ export default {
                         baseChar: '',
                         equipChar: '',
                         progChar: '',
-                        result: ''
+                        result: '',
+                        usedRes: '',
                     })
                     // console.log('addBptp')
 
@@ -190,7 +191,8 @@ export default {
                         baseChar: '',
                         equipChar: '',
                         progChar: '',
-                        result: ''
+                        result: '',
+                        usedRes: '',
                     })
                     // console.log('addMptp')
 

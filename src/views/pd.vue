@@ -5,7 +5,7 @@
         <header>
         </header>
         <div class="content-wrapper">
-        <p class="ui-title-4 center">Дневник практики: {{prac.title}} </p>
+        <p class="ui-title-4 center">Дневник практики: {{prac.type}} </p>
         <p class="ui-title-4 center">{{stud[0].fname}}</p>
         
         <table class="ui-table ui-table--hover preview">
