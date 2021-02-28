@@ -27,7 +27,7 @@
 
 <script>
 import { saveAs } from 'file-saver';
-import { WidthType, BorderStyle, Document, Paragraph, Packer, TextRun, Header, Footer, AlignmentType, HeadingLevel, PageNumber, PageNumberFormat } from "docx";
+import { WidthType, BorderStyle, Document, Paragraph, Packer, TextRun, Header, Footer, AlignmentType, HeadingLevel, PageNumber, PageNumberFormat, TableOfContents, StyleLevel} from "docx";
 
 export default {
     data: () => ({
@@ -43,10 +43,10 @@ export default {
         jobname: ''
     }),
 
-    components: {
-      Document, Paragraph, Packer, TextRun, saveAs, BorderStyle, WidthType, Header, Footer, AlignmentType, HeadingLevel, PageNumber, PageNumberFormat
+     components: {
+      Document, Paragraph, Packer, TextRun, saveAs, BorderStyle, WidthType, Header, Footer, AlignmentType, HeadingLevel, PageNumber, PageNumberFormat, TableOfContents, StyleLevel
     },
-
+    
     async mounted() {
         this.pid = this.$route.query.prac
         this.sid = this.$route.query.stud
@@ -128,12 +128,44 @@ export default {
             this.$message("Заполните все поля перед созданием документа")
             return
           }
-            console.log('create doc')
+            //console.log('create doc')
 
              const doc = new Document({
             creator: "VTIK Practice System",
             description: "Made in VTIK Practice System",
             title: "Report",
+
+            styles: {
+
+              paragraphStyles: [
+                {
+                    id: "HeadingCustom",
+                    name: "HeadingCustom",
+                    basedOn: "Heading1",
+                    next: "Heading1",
+                    //quickFormat: true,
+                    run: {
+                        italics: false,
+                        bold: false,
+                        font: "Times New Roman",
+                        size: 28,
+                        color: "000000",
+                    },
+                },
+
+                {
+                 // Only `name` prop required, `id` not necessary
+                  name: 'Normal',
+                  run: {
+                    color: '#000000',
+                    font: "Times New Roman",
+                    size: 28,
+                    italics: false,
+                    bold: false,
+                },}
+
+                ],
+                },
            });
           doc.Settings.addCompatibility().doNotExpandShiftReturn();
 
@@ -145,63 +177,39 @@ export default {
                   alignment: AlignmentType.CENTER,
                   children: [new TextRun( {
                   text: "Министерство науки и высшего образования Российской Федерации",
-                  bold: false,
-                  font: "Times New Roman",
-                  size: 28,
                   }),
 
                   new TextRun( {
                   text: "Федеральное государственное бюджетное образовательное учреждение",
-                  bold: false,
-                  font: "Times New Roman",
-                  size: 28,
                   break: 1,
                   }),
 
                   new TextRun( {
                   text: "высшего образования",
-                  bold: false,
-                  font: "Times New Roman",
-                  size: 28,
                   break: 1,
                   }),
 
                   new TextRun( {
                   text: "«Уфимский государственный нефтяной технический университет»",
-                  bold: false,
-                  font: "Times New Roman",
-                  size: 28,
                   break: 1,
                   }),
 
                   new TextRun( {
                   text: "Кафедра «" + this.head.depart + "»",
-                  bold: false,
-                  font: "Times New Roman",
-                  size: 28,
                   break: 1,
                   }),
 
                   new TextRun( {
                   text: "Отчет",
-                  bold: false,
-                  font: "Times New Roman",
-                  size: 28,
                   break: 6,
                   }),
 
                   new TextRun( {
                   text: "по учебной практике",
-                  bold: false,
-                  font: "Times New Roman",
-                  size: 28,
                   break: 1,
                   }),
                   new TextRun( {
                   text: "(тип: " + this.prac.type.toLowerCase() + ")",
-                  bold: false,
-                  font: "Times New Roman",
-                  size: 28,
                   break: 1,
                   }),
                   ],
@@ -219,10 +227,7 @@ export default {
                   children: [
                     new TextRun( {
                     text: "Студент гр. " + this.group.title + "\t_________________________ " + this.short_sname,
-                    bold: false,
-                    font: "Times New Roman",
-                    size: 28,
-                    break: 10,
+                    break: 8,
                     }),
 
                     new TextRun( {
@@ -235,17 +240,12 @@ export default {
 
                     new TextRun( {
                     text: "Руководитель практики",
-                    bold: false,
-                    font: "Times New Roman",
-                    size: 28,
-                    break: 3,
+                    break: 2,
                     }),
 
                     new TextRun( {
                     text: "от кафедры " + this.head.abbr + "\t\t_________________________ " + this.short_hname,
-                    bold: false,
-                    font: "Times New Roman",
-                    size: 28,
+
                     break: 1,
                     }),
 
@@ -268,9 +268,6 @@ export default {
                   children: [
                     new TextRun( {
                     text: "Уфа " + this.year,
-                    bold: false,
-                    font: "Times New Roman",
-                    size: 28,
                     break: 6,
                     }),
                   ]
@@ -309,49 +306,49 @@ export default {
                     ]
             });
 
-            const content = new Paragraph({
-                  spacing: {
-                            line: 360,
-                        },
-                  alignment: AlignmentType.JUSTIFIED,
-                  children: [
-                    //  new TextRun( {
-                    // text: 'Введение',
-                    // bold: false,
-                    // font: "Times New Roman",
-                    // size: 28,
-                    // //break: 1,
-                    // }),
-                    new TextRun( {
-                    text: '1  Программирование',
-                    bold: false,
-                    font: "Times New Roman",
-                    size: 28,
-                    //break: 1,
-                    }),
-                    new TextRun( {
-                    text: '2  Кодирование данных',
-                    bold: false,
-                    font: "Times New Roman",
-                    size: 28,
-                    break: 1,
-                    }),
-                    new TextRun( {
-                    text: '3  Результаты выполнения тестовых заданий',
-                    bold: false,
-                    font: "Times New Roman",
-                    size: 28,
-                    break: 1,
-                    }),
-                    new TextRun( {
-                    text: '4  Выводы по практике',
-                    bold: false,
-                    font: "Times New Roman",
-                    size: 28,
-                    break: 1,
-                    }),
-                    ]
-            });
+            // const content = new Paragraph({
+            //       spacing: {
+            //                 line: 360,
+            //             },
+            //       alignment: AlignmentType.JUSTIFIED,
+            //       children: [
+            //         //  new TextRun( {
+            //         // text: 'Введение',
+            //         // bold: false,
+            //         // font: "Times New Roman",
+            //         // size: 28,
+            //         // //break: 1,
+            //         // }),
+            //         new TextRun( {
+            //         text: '1  Программирование',
+            //         bold: false,
+            //         font: "Times New Roman",
+            //         size: 28,
+            //         //break: 1,
+            //         }),
+            //         new TextRun( {
+            //         text: '2  Кодирование данных',
+            //         bold: false,
+            //         font: "Times New Roman",
+            //         size: 28,
+            //         break: 1,
+            //         }),
+            //         new TextRun( {
+            //         text: '3  Результаты выполнения тестовых заданий',
+            //         bold: false,
+            //         font: "Times New Roman",
+            //         size: 28,
+            //         break: 1,
+            //         }),
+            //         new TextRun( {
+            //         text: '4  Выводы по практике',
+            //         bold: false,
+            //         font: "Times New Roman",
+            //         size: 28,
+            //         break: 1,
+            //         }),
+            //         ]
+            // });
 
 
             let programmingTask = this.splitLines(this.report.programmingTask)
@@ -362,15 +359,17 @@ export default {
                         },
                   pageBreakBefore: true,
                   alignment: AlignmentType.LEFT,
-                  children: [
-                    new TextRun( {
-                    text: '\t1\tПрограммирование',
-                    bold: false,
-                    font: "Times New Roman",
-                    size: 28,
-                    //break: 1,
-                    }),
-                  ]
+                  text: "\t1\tПрограммирование",
+                  style: "HeadingCustom",
+                  // children: [
+                  //   new TextRun( {
+                  //   text: '\t1\tПрограммирование',
+                  //   bold: false,
+                  //   font: "Times New Roman",
+                  //   size: 28,
+                  //   //break: 1,
+                  //   }),
+                  // ]
             });
 
             let dataCodeTask = this.splitLines(this.report.dataCodeTask)
@@ -381,15 +380,17 @@ export default {
                         },
                   pageBreakBefore: true,
                   alignment: AlignmentType.LEFT,
-                  children: [
-                    new TextRun( {
-                    text: '\t2\tКодирование данных',
-                    bold: false,
-                    font: "Times New Roman",
-                    size: 28,
-                    //break: 1,
-                    }),
-                  ]
+                  text: "\t2\tКодирование данных",
+                  style: "HeadingCustom",
+                  // children: [
+                  //   new TextRun( {
+                  //   text: '\t2\tКодирование данных',
+                  //   bold: false,
+                  //   font: "Times New Roman",
+                  //   size: 28,
+                  //   //break: 1,
+                  //   }),
+                  // ]
             });
 
             let taskResults = this.splitLines(this.report.taskResults)
@@ -400,15 +401,17 @@ export default {
                         },
                   pageBreakBefore: true,
                   alignment: AlignmentType.LEFT,
-                  children: [
-                    new TextRun( {
-                    text: '\t3\tРезультаты выполнения тестовых заданий',
-                    bold: false,
-                    font: "Times New Roman",
-                    size: 28,
-                    //break: 1,
-                    }),
-                  ]
+                  text: "\t3\tРезультаты выполнения тестовых заданий",
+                  style: "HeadingCustom",
+                  // children: [
+                  //   new TextRun( {
+                  //   text: '\t3\tРезультаты выполнения тестовых заданий',
+                  //   bold: false,
+                  //   font: "Times New Roman",
+                  //   size: 28,
+                  //   //break: 1,
+                  //   }),
+                  // ]
             });
 
             let conclusion = this.splitLines(this.report.conclusion)
@@ -419,16 +422,26 @@ export default {
                         },
                   pageBreakBefore: true,
                   alignment: AlignmentType.LEFT,
-                  children: [
-                    new TextRun( {
-                    text: '\t4\tВыводы по практике',
-                    bold: false,
-                    font: "Times New Roman",
-                    size: 28,
-                    //break: 1,
-                    }),
-                  ]
+                  text: "\t4\tВыводы по практике",
+                  style: "HeadingCustom",
+                  // children: [
+                  //   new TextRun( {
+                  //   text: '\t4\tВыводы по практике',
+                  //   bold: false,
+                  //   font: "Times New Roman",
+                  //   size: 28,
+                  //   //break: 1,
+                  //   }),
+                  // ]
             });
+
+            let toc = new TableOfContents("Содержание",
+                    {
+                    hyperlink: true,
+                    headingStyleRange: "1-1",
+                    stylesWithLevels: [new StyleLevel("HeadingCustom", 1)],
+                    
+                    });
 
             doc.addSection({
             margins: {
@@ -437,6 +450,7 @@ export default {
             bottom: 850,
             left: 1700,
             },
+            
 
             footers: {
             default: new Footer({
@@ -463,7 +477,8 @@ export default {
 
             children: [
                     contenth,
-                    content,
+                    toc,
+                    //content,
 
                     programmingTaskh,
                     ...programmingTask

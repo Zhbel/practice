@@ -238,7 +238,7 @@ export default {
                   children: [
                     new TextRun( {
                     text: "Студент гр. " + this.group.title + "\t\t_________________________ " + this.short_sname,
-                    break: 10,
+                    break: 8,
                     }),
 
                     new TextRun( {
@@ -249,7 +249,7 @@ export default {
 
                     new TextRun( {
                     text: "Руководитель практики",
-                    break: 3,
+                    break: 2,
                     }),
 
                     new TextRun( {
