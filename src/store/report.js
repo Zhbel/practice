@@ -96,9 +96,9 @@ export default {
             }
         },
 
-        async UpdateMyop({ commit, dispatch }, { pid, log, conclusion, dataCodeTask, programmingTask, taskResults }) {
+        async UpdateMyop({ commit, dispatch }, { pid, log, baseChar, equipChar, intro, progChar, result, usedRes }) {
             try {
-                await firebase.database().ref(`/pracMyop/${pid}/`).child(log).update({ conclusion, dataCodeTask, programmingTask, taskResults })
+                await firebase.database().ref(`/pracMyop/${pid}/`).child(log).update({ baseChar, equipChar, intro, progChar, result, usedRes })
                 console.log('updateMyop')
             } catch (e) {
                 commit('setError', e)
@@ -116,9 +116,9 @@ export default {
             }
         },
 
-        async UpdateMpNIR({ commit, dispatch }, { pid, log, conclusion, dataCodeTask, programmingTask, taskResults }) {
+        async UpdateMpNIR({ commit, dispatch }, { pid, log, conf, halfyear, other, publicW, review, workbefore }) {
             try {
-                await firebase.database().ref(`/pracMpNIR/${pid}/`).child(log).update({ conclusion, dataCodeTask, programmingTask, taskResults })
+                await firebase.database().ref(`/pracMpNIR/${pid}/`).child(log).update({ conf, halfyear, other, publicW, review, workbefore })
                 console.log('updateMpNIR')
             } catch (e) {
                 commit('setError', e)
@@ -159,9 +159,9 @@ export default {
             }
         },
 
-        async UpdateAnip({ commit, dispatch }, { pid, log, conclusion, personalTask, placeDesc, pracBase, pracHead, researchArea, usedLit, usedPubl, usedRes }) {
+        async UpdateAnip({ commit, dispatch }, { pid, log, conclusion, personalTask, placeDesc, pracBase, pracHead, researchArea, taskRes, usedLit, usedPubl, usedRes }) {
             try {
-                await firebase.database().ref(`/pracAnip/${pid}/`).child(log).update({ conclusion, personalTask, placeDesc, pracBase, pracHead, researchArea, usedLit, usedPubl, usedRes })
+                await firebase.database().ref(`/pracAnip/${pid}/`).child(log).update({ conclusion, personalTask, placeDesc, pracBase, pracHead, researchArea, taskRes, usedLit, usedPubl, usedRes })
                 console.log('updateAnip')
             } catch (e) {
                 commit('setError', e)

@@ -234,7 +234,7 @@ export default {
                   }),
 
                   new TextRun( {
-                  text: "по " + this.jobname,
+                  text: "по практике",
                   break: 1,
                   }),
 
@@ -416,64 +416,7 @@ export default {
                     ]
             });
 
-            // const content = new Paragraph({
-            //       spacing: {
-            //                 line: 360,
-            //             },
-            //       alignment: AlignmentType.JUSTIFIED,
-            //       children: [
-            //          new TextRun( {
-            //         text: 'Введение',
-            //         bold: false,
-            //         font: "Times New Roman",
-            //         size: 28,
-            //         //break: 1,
-            //         }),
-            //         new TextRun( {
-            //         text: '1  Характеристика предприятия',
-            //         bold: false,
-            //         font: "Times New Roman",
-            //         size: 28,
-            //         break: 1,
-            //         }),
-            //         new TextRun( {
-            //         text: '2  Характеристика оборудования',
-            //         bold: false,
-            //         font: "Times New Roman",
-            //         size: 28,
-            //         break: 1,
-            //         }),
-            //         new TextRun( {
-            //         text: '3  Используемые программные продукты',
-            //         bold: false,
-            //         font: "Times New Roman",
-            //         size: 28,
-            //         break: 1,
-            //         }),
-            //         new TextRun( {
-            //         text: '4  Результаты выполнения индивидуальных заданий',
-            //         bold: false,
-            //         font: "Times New Roman",
-            //         size: 28,
-            //         break: 1,
-            //         }),
-            //         new TextRun( {
-            //         text: 'Список использованных источников',
-            //         bold: false,
-            //         font: "Times New Roman",
-            //         size: 28,
-            //         break: 1,
-            //         }),
-            //         new TextRun( {
-            //         text: 'Приложение A (обязательное). Дневник практики',
-            //         bold: false,
-            //         font: "Times New Roman",
-            //         size: 28,
-            //         break: 1,
-            //         }),
-            //         ]
-            // });
-
+   
             const lith = new Paragraph({
                   spacing: {
                             line: 360,

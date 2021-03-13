@@ -52,6 +52,8 @@
 </template>
 
 <script>
+import { saveAs } from 'file-saver';
+import { WidthType, Table, TableCell, TableRow, BorderStyle, Document, Paragraph, Packer, TextRun, Header, Footer, AlignmentType, HeadingLevel, PageNumber, PageNumberFormat, TableOfContents, StyleLevel } from "docx";
 import { format, parse } from "date-fns";
 
 export default {
@@ -61,11 +63,16 @@ export default {
         pd: [],
         prac: '',
         day: '',
+        ref: '',
         EditButton: false,
         stud: [{fname: ''}],
         format: 'dd.MM.yyyy',
         format1: 'dd_MM_yyyy',
     }),
+
+    components: {
+      Document, Paragraph, Table, TableCell, TableRow, Packer, TextRun, saveAs, BorderStyle, WidthType, Header, Footer, AlignmentType, HeadingLevel, PageNumber, PageNumberFormat, TableOfContents, StyleLevel
+    },
 
     async mounted() {
         this.pid = this.$route.query.prac
@@ -76,6 +83,7 @@ export default {
 
         var pid = this.pid
         var sid = this.sid
+        this.ref = await this.$store.dispatch('getRefById', {pid, sid})
         this.pd = await this.$store.dispatch('getPd', {pid, sid})
 
         this.pd.forEach(day => {
@@ -90,8 +98,9 @@ export default {
 
         //this.report = await this.$store.dispatch('getAniByID', this.idRep)
         //this.student = await this.$store.dispatch('getStudById', this.report.sid)
+        //console.log(this.ref)
         //console.log(this.report)
-        //console.log(this.student)
+        //console.log(this.stud[0])
     },
 
     methods: {
@@ -134,7 +143,169 @@ export default {
     },
 
     createDoc(){
-      console.log('createDOc')
+      const doc = new Document({
+            creator: "VTIK Practice System",
+            description: "Made in VTIK Practice System",
+            title: "Report",
+
+            styles: {
+
+              paragraphStyles: [
+
+                {
+                 // Only `name` prop required, `id` not necessary
+                  name: 'Normal',
+                  run: {
+                    color: '#000000',
+                    font: "Times New Roman",
+                    size: 28,
+                    italics: false,
+                    bold: false,
+                },}
+
+                ],
+                },
+           });
+
+          const table = new Table({
+            columnWidths: [],
+            alignment: AlignmentType.CENTER,
+            rows: [],
+                width: {
+                    size: 8000,
+                    type: WidthType,
+                        }
+                    });
+          
+          const head = new TableRow({
+          tableHeader: true,
+          children: [
+              new TableCell({
+                  verticalAlign: AlignmentType.CENTER,
+                  margins: {
+                  top: 100,
+                  right: 100,
+                  bottom: 100,
+                  left: 100,
+                  },
+                  
+                  children: [new Paragraph({
+                    text: "Дата",
+                    alignment: AlignmentType.CENTER,
+                    })],
+              }),
+              new TableCell({
+                  verticalAlign: AlignmentType.CENTER,
+                  margins: {
+                  top: 100,
+                  right: 100,
+                  bottom: 100,
+                  left: 100,
+                  },
+                  children: [new Paragraph({
+                    text: "Наименование предприятия",
+                    alignment: AlignmentType.CENTER,
+                    })],
+              }),
+              new TableCell({
+                  margins: {
+                  top: 100,
+                  right: 100,
+                  bottom: 100,
+                  left: 100,
+                  },
+                  verticalAlign: AlignmentType.CENTER,
+                  children: [new Paragraph({
+                    text: "Описание работ, выполненных студентом",
+                    alignment: AlignmentType.CENTER,
+                    })],
+              }),
+              new TableCell({
+                  margins: {
+                  top: 100,
+                  right: 100,
+                  bottom: 100,
+                  left: 100,
+                  },
+                  verticalAlign: AlignmentType.CENTER,
+                  children: [new Paragraph({
+                    text: "Отметка о выполнении руководителя (подпись)",
+                    alignment: AlignmentType.CENTER,
+                    })],
+              }),
+                  ],
+              });
+
+           table.addChildElement(head);
+
+          doc.addSection({
+          children: [
+              table
+          ],
+          });
+
+          this.pd.forEach(day => {
+            //console.log(day)
+            let text = day.text
+            let date = day.date
+            let tday = new TableRow({
+               children: [
+                 new TableCell({
+                  //verticalAlign: AlignmentType.CENTER,
+                  margins: {
+                  right: 50,
+                  left: 50,
+                  },
+                  children: [new Paragraph({
+                    text: date,
+                    alignment: AlignmentType.LEFT,
+                    })],
+              }),
+              new TableCell({
+                  margins: {
+                  right: 50,
+                  left: 50,
+                  },
+                  //verticalAlign: AlignmentType.CENTER,
+                  children: [new Paragraph({
+                    text: this.ref.pracbase,
+                    alignment: AlignmentType.LEFT,
+                    })],
+              }),
+              new TableCell({
+                  margins: {
+                  right: 50,
+                  left: 50,
+                  },
+                  //verticalAlign: AlignmentType.CENTER,
+                  children: [new Paragraph({
+                    text: text,
+                    alignment: AlignmentType.LEFT,
+                    })],
+              }),
+              new TableCell({
+                  margins: {
+                  right: 50,
+                  left: 50,
+                  },
+                  //verticalAlign: AlignmentType.CENTER,
+                  children: [new Paragraph({
+                    text: "",
+                    alignment: AlignmentType.LEFT,
+                    })],
+              }),
+                  ],
+              });
+              table.addChildElement(tday);
+            });
+            
+         // });
+
+          Packer.toBlob(doc).then(blob => {
+                //console.log(this.fname)
+                saveAs(blob,'pd_' + this.stud[0].login + '.docx' );
+            });
+              
     }
     }
 

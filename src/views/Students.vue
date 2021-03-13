@@ -160,12 +160,12 @@
           <div class="ui-messageBox__wrapper" v-if="delBox"  style="display: flex;">
             <div class="ui-messageBox fadeInDown group" @click.stop="">
              <div class="ui-messageBox__header"><span class="messageBox-title">Внимание!</span>
-             <span class="button-close ui-messageBox-close" @click="canсelDel"></span></div>
+             <span class="button-close ui-messageBox-close" @click="canсelDel()"></span></div>
              <div class="ui-messageBox__content"><span>Вы желаете удалить студента из системы?</span>
              <!--Selector-->
              </div>
               <div class="ui-messageBox__footer">
-              <div class="button button-light ui-messageBox-cancel" @click="canсelDel">Нет</div>
+              <div class="button button-light ui-messageBox-cancel" @click="canсelDel()">Нет</div>
               <div class="button button-primary ui-messageBox-ok" @click="finishDel">Да</div>
               </div>
               </div>
@@ -297,6 +297,7 @@ export default {
     canсelDel(){
       this.delBox = false
       this.delstud = ''
+      //console.log('canceldel')
     },
 
     async finishDel(){

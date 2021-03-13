@@ -251,7 +251,7 @@ export default {
                   }),
 
                   new TextRun( {
-                  text: "по " + this.jobname,
+                  text: "по практике",
                   break: 1,
                   }),
 

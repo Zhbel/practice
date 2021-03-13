@@ -209,7 +209,7 @@ export default {
                   }),
 
                   new TextRun( {
-                  text: "по учебной практике",
+                  text: "по практике",
                   break: 1,
                   }),
                   new TextRun( {

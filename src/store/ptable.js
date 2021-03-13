@@ -9,6 +9,7 @@ export default {
                     pid: tmpAnip.pid,
                     pracBase: '',
                     pracHead: '',
+                    taskRes: '',
                     placeDesc: '',
                     researchArea: '',
                     personalTask: '',
@@ -149,10 +150,12 @@ export default {
                 await firebase.database().ref(`/pracMyop/${tmpMyop.pid}/${tmpMyop.log}/`).set({
                         sid: tmpMyop.sid,
                         pid: tmpMyop.pid,
-                        taskResults: '',
-                        dataCodeTask: '',
-                        programmingTask: '',
-                        conclusion: '',
+                        intro: '',
+                        baseChar: '',
+                        equipChar: '',
+                        progChar: '',
+                        result: '',
+                        usedRes: '',
                     })
                     // console.log('addMyop')
 
@@ -168,10 +171,12 @@ export default {
                 await firebase.database().ref(`/pracMpNIR/${tmpMpNIR.pid}/${tmpMpNIR.log}/`).set({
                         sid: tmpMpNIR.sid,
                         pid: tmpMpNIR.pid,
-                        taskResults: '',
-                        dataCodeTask: '',
-                        programmingTask: '',
-                        conclusion: '',
+                        workbefore: '',
+                        halfyear: '',
+                        publicW: '',
+                        conf: '',
+                        other: '',
+                        review: '',
                     })
                     // console.log('addMpNIR')
 

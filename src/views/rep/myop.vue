@@ -7,14 +7,18 @@
         <div class="content-wrapper">
           <p class="ui-title-4 center">{{prac.type}}: Отчет</p>
           <p class="ui-title-4 center">{{student.fname}}</p>
-          <p>Программирование:</p>
-          <textarea v-model="report.programmingTask" class="textarea"></textarea>
-          <p>Кодирование данных:</p>
-          <textarea v-model="report.dataCodeTask" class="textarea"></textarea>
-          <p>Результаты выполнения тестовых заданий:</p>
-          <textarea v-model="report.taskResults" class="textarea"></textarea>
-          <p>Выводы по практике:</p>
-          <textarea v-model="report.conclusion" class="textarea"></textarea>
+          <p>Введение:</p>
+          <textarea v-model="report.intro" class="textarea"></textarea>
+          <p>Характеристика предприятия:</p>
+          <textarea v-model="report.baseChar" class="textarea"></textarea>
+          <p>Характеристика оборудования:</p>
+          <textarea v-model="report.equipChar" class="textarea"></textarea>
+          <p>Используемые программные продукты:</p>
+          <textarea v-model="report.progChar" class="textarea"></textarea>
+          <p>Результат выполнения индивидуальных заданий:</p>
+          <textarea v-model="report.result" class="textarea"></textarea>
+          <p>Используемые источники:</p>
+          <textarea v-model="report.usedRes" class="textarea"></textarea>
           <div class="row">
           <div class="button button-primary" @click="saveRep">Сохранить</div>
           <div class="button button-light doc" @click="createDoc">Создать документ</div>
@@ -50,23 +54,25 @@ export default {
     async mounted() {
         this.pid = this.$route.query.prac
         this.sid = this.$route.query.stud
-        //console.log(this.idRep)
         var pid = this.pid
         var sid = this.sid
-        //console.log(this.pid)
+        // console.log(this.pid)
+        // console.log(this.sid)
         this.report = await this.$store.dispatch('getMyopByID', {pid, sid})
         this.student = await this.$store.dispatch('getStudById', this.report.sid)
         Object.assign(this.report, {log: this.sid});
 
         this.group = await this.$store.dispatch('getGroupById', this.student.grid)
+        this.ref = await this.$store.dispatch('getRefById', {pid, sid})
         this.year = new Date().getFullYear()
         this.prac = await this.$store.dispatch('getPracById', this.report.pid)
         this.head = await this.$store.dispatch('getHeadById', this.prac.pid)
 
-
+        //console.log(this.student)
+        //console.log(this.head)
         this.short_sname = this.initials(this.student.fname)
         this.short_hname = this.initials(this.head.fname)
-       // console.log(this.student)
+        //console.log(this.student)
     },
 
     methods: {
@@ -111,6 +117,26 @@ export default {
         });
       },
 
+      createLitLine(text) {
+        return new Paragraph({
+            spacing: {
+                            line: 360,
+                        },
+                  alignment: AlignmentType.JUSTIFIED,
+                  //keepNext: true,
+                  //keepLines: true,
+                  children: [
+                    new TextRun( {
+                    text: text,
+                    bold: false,
+                    font: "Times New Roman",
+                    size: 28,
+                    //break: 1,
+                    }),
+                  ],
+        });
+      },
+
         async saveRep(){
        // console.log('saveRep')
        // console.log(this.report)
@@ -124,13 +150,13 @@ export default {
       },
 
       createDoc(){
-            if(this.report.conclusion == "" || this.report.dataCodeTask == "" || this.report.programmingTask == "" || this.report.taskResults == ""){
+
+          if(this.report.baseChar == "" || this.report.equipChar == "" || this.report.intro == "" || this.report.progChar == "" || this.report.result == "" || this.report.usedRes == ""){
             this.$message("Заполните все поля перед созданием документа")
             return
           }
-            //console.log('create doc')
-
-             const doc = new Document({
+            
+          const doc = new Document({
             creator: "VTIK Practice System",
             description: "Made in VTIK Practice System",
             title: "Report",
@@ -167,9 +193,10 @@ export default {
                 ],
                 },
            });
-          doc.Settings.addCompatibility().doNotExpandShiftReturn();
 
-          ///титульник
+          
+          doc.Settings.addCompatibility().doNotExpandShiftReturn();
+            ///титульник
             const paragraph1 = new Paragraph({
                   spacing: {
                         line: 360,
@@ -201,13 +228,29 @@ export default {
 
                   new TextRun( {
                   text: "Отчет",
-                  break: 6,
+                  break: 4,
                   }),
 
                   new TextRun( {
-                  text: "по учебной практике",
+                  text: "по практике",
                   break: 1,
                   }),
+
+                  // new TextRun( {
+                  // text: "(практика по получению профессиональных умений",
+                  // bold: false,
+                  // font: "Times New Roman",
+                  // size: 28,
+                  // break: 1,
+                  // }),
+
+                  // new TextRun( {
+                  // text: "и опыта профессиональной деятельности)",
+                  // bold: false,
+                  // font: "Times New Roman",
+                  // size: 28,
+                  // break: 1,
+                  // })
                   new TextRun( {
                   text: "(тип: " + this.prac.type.toLowerCase() + ")",
                   break: 1,
@@ -227,11 +270,56 @@ export default {
                   children: [
                     new TextRun( {
                     text: "Студент гр. " + this.group.title + "\t_________________________ " + this.short_sname,
-                    break: 8,
+                    break: 6,
                     }),
 
                     new TextRun( {
                     text: "\t\t\t\t\t\t подпись, дата",
+                    bold: false,
+                    font: "Times New Roman",
+                    size: 16,
+                    break: 1,
+                    }),
+
+                    new TextRun( {
+                    text: "Место\t\t\t\t",
+                    break: 2,
+                    }),
+
+                    new TextRun( {
+                    text: this.ref.pracbase,
+                    underline: {},
+                    }),
+
+                    new TextRun( {
+                    text: "прохождения практики",
+                    break: 1,
+                    }),
+
+                    new TextRun( {
+                    text: "Руководитель практики\t\t" + "_________________________",
+                    break: 2,
+                    }),
+
+                    new TextRun( {
+                    text: "от предприятия\t\t\t\t\t",
+                    break: 1,
+                    }),
+
+                    new TextRun( {
+                    text: "должность",
+                    bold: false,
+                    font: "Times New Roman",
+                    size: 16,
+                    }),
+
+                    new TextRun( {
+                    text: "\t\t\t\t\t_________________________ " + this.initials(this.ref.pracHead),
+                    break: 1,
+                    }),
+
+                    new TextRun( {
+                    text: "\t\t\t\t\t\t   подпись, дата, оценка, МП",
                     bold: false,
                     font: "Times New Roman",
                     size: 16,
@@ -245,12 +333,11 @@ export default {
 
                     new TextRun( {
                     text: "от кафедры " + this.head.abbr + "\t\t_________________________ " + this.short_hname,
-
                     break: 1,
                     }),
 
                     new TextRun( {
-                    text: "\t\t\t\t\t\t   подпись, дата, оценка",
+                    text: "\t\t\t\t\t\t   подпись, дата",
                     bold: false,
                     font: "Times New Roman",
                     size: 16,
@@ -268,7 +355,7 @@ export default {
                   children: [
                     new TextRun( {
                     text: "Уфа " + this.year,
-                    break: 6,
+                    break: 5,
                     }),
                   ]
             });
@@ -289,6 +376,27 @@ export default {
 	          });
             
              ///титульник
+            
+            const introh = new Paragraph({
+                  spacing: {
+                            line: 360,
+                            after: 200,
+                        },
+                  alignment: AlignmentType.CENTER,
+                  pageBreakBefore: true,
+                  text: "ВВЕДЕНИЕ",
+                  style: "HeadingCustom",
+                  // children: [
+                  //   new TextRun( {
+                  //   text: 'ВВЕДЕНИЕ',
+                  //   bold: false,
+                  //   font: "Times New Roman",
+                  //   size: 28,
+                  //   //break: 1,
+                  //   }),
+                  // ]
+            });
+
             const contenth = new Paragraph({
                   spacing: {
                             line: 360,
@@ -306,42 +414,48 @@ export default {
                     ]
             });
 
-            // const content = new Paragraph({
+   
+            const lith = new Paragraph({
+                  spacing: {
+                            line: 360,
+                            after: 200,
+                        },
+                  alignment: AlignmentType.CENTER,
+                  pageBreakBefore: true,
+                  text: "СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ",
+                  style: "HeadingCustom",
+                  // children: [
+                  //   new TextRun( {
+                  //   text: 'СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ',
+                  //   bold: false,
+                  //   font: "Times New Roman",
+                  //   size: 28,
+                  //   //break: 1,
+                  //   }),
+                  //   ]
+            });
+
+            // const lit = new Paragraph({
             //       spacing: {
             //                 line: 360,
             //             },
             //       alignment: AlignmentType.JUSTIFIED,
             //       children: [
-            //         //  new TextRun( {
-            //         // text: 'Введение',
-            //         // bold: false,
-            //         // font: "Times New Roman",
-            //         // size: 28,
-            //         // //break: 1,
-            //         // }),
             //         new TextRun( {
-            //         text: '1  Программирование',
+            //         text: '1',
             //         bold: false,
             //         font: "Times New Roman",
             //         size: 28,
-            //         //break: 1,
             //         }),
             //         new TextRun( {
-            //         text: '2  Кодирование данных',
+            //         text: '2',
             //         bold: false,
             //         font: "Times New Roman",
             //         size: 28,
             //         break: 1,
             //         }),
             //         new TextRun( {
-            //         text: '3  Результаты выполнения тестовых заданий',
-            //         bold: false,
-            //         font: "Times New Roman",
-            //         size: 28,
-            //         break: 1,
-            //         }),
-            //         new TextRun( {
-            //         text: '4  Выводы по практике',
+            //         text: '3',
             //         bold: false,
             //         font: "Times New Roman",
             //         size: 28,
@@ -350,20 +464,20 @@ export default {
             //         ]
             // });
 
+           
 
-            let programmingTask = this.splitLines(this.report.programmingTask)
-            const programmingTaskh = new Paragraph({
+            const baseCharh = new Paragraph({
                   spacing: {
                             line: 360,
                             after: 200,
                         },
                   pageBreakBefore: true,
                   alignment: AlignmentType.LEFT,
-                  text: "\t1\tПрограммирование",
+                  text: "\t1\tХарактеристика предприятия",
                   style: "HeadingCustom",
                   // children: [
                   //   new TextRun( {
-                  //   text: '\t1\tПрограммирование',
+                  //   text: '\t1\tХарактеристика предприятия',
                   //   bold: false,
                   //   font: "Times New Roman",
                   //   size: 28,
@@ -372,19 +486,18 @@ export default {
                   // ]
             });
 
-            let dataCodeTask = this.splitLines(this.report.dataCodeTask)
-            const dataCodeTaskh = new Paragraph({
+            const equipCharh = new Paragraph({
                   spacing: {
                             line: 360,
                             after: 200,
                         },
                   pageBreakBefore: true,
                   alignment: AlignmentType.LEFT,
-                  text: "\t2\tКодирование данных",
+                  text: "\t2\tХарактеристика оборудования",
                   style: "HeadingCustom",
                   // children: [
                   //   new TextRun( {
-                  //   text: '\t2\tКодирование данных',
+                  //   text: '\t2\tХарактеристика оборудования',
                   //   bold: false,
                   //   font: "Times New Roman",
                   //   size: 28,
@@ -393,19 +506,18 @@ export default {
                   // ]
             });
 
-            let taskResults = this.splitLines(this.report.taskResults)
-            const taskResultsh = new Paragraph({
+            const progCharh = new Paragraph({
                   spacing: {
                             line: 360,
                             after: 200,
                         },
                   pageBreakBefore: true,
                   alignment: AlignmentType.LEFT,
-                  text: "\t3\tРезультаты выполнения тестовых заданий",
+                  text: "\t3\tИспользуемые программные продукты",
                   style: "HeadingCustom",
                   // children: [
                   //   new TextRun( {
-                  //   text: '\t3\tРезультаты выполнения тестовых заданий',
+                  //   text: '\t3\tИспользуемые программные продукты',
                   //   bold: false,
                   //   font: "Times New Roman",
                   //   size: 28,
@@ -414,19 +526,18 @@ export default {
                   // ]
             });
 
-            let conclusion = this.splitLines(this.report.conclusion)
-            const conclusionh = new Paragraph({
+            const resulth = new Paragraph({
                   spacing: {
                             line: 360,
                             after: 200,
                         },
                   pageBreakBefore: true,
                   alignment: AlignmentType.LEFT,
-                  text: "\t4\tВыводы по практике",
+                  text: "\t4\tРезультаты выполнения индивидуальных заданий",
                   style: "HeadingCustom",
                   // children: [
                   //   new TextRun( {
-                  //   text: '\t4\tВыводы по практике',
+                  //   text: '\t4\tРезультаты выполнения индивидуальных заданий',
                   //   bold: false,
                   //   font: "Times New Roman",
                   //   size: 28,
@@ -442,7 +553,15 @@ export default {
                     stylesWithLevels: [new StyleLevel("HeadingCustom", 1)],
                     
                     });
+            
+            let intro = this.splitLines(this.report.intro)
+            let baseChar = this.splitLines(this.report.baseChar)
+            let equipChar = this.splitLines(this.report.equipChar)
+            let progChar = this.splitLines(this.report.progChar)
+            let result = this.splitLines(this.report.result)
+            let lit = this.splitLines(this.report.usedRes)
 
+            //console.log(lit)
             doc.addSection({
             margins: {
             top: 850,
@@ -450,7 +569,6 @@ export default {
             bottom: 850,
             left: 1700,
             },
-            
 
             footers: {
             default: new Footer({
@@ -480,8 +598,8 @@ export default {
                     toc,
                     //content,
 
-                    programmingTaskh,
-                    ...programmingTask
+                    introh,
+                    ...intro
                     .map((string) => {
                         const arr = [];
                         const bulletPoints = this.splitParagraphIntoStrings(string);
@@ -493,8 +611,8 @@ export default {
                         return arr;
                     })  .reduce((prev, curr) => prev.concat(curr), []),
 
-                    dataCodeTaskh,
-                    ...dataCodeTask
+                    baseCharh,
+                    ...baseChar
                     .map((string) => {
                         const arr = [];
                         const bulletPoints = this.splitParagraphIntoStrings(string);
@@ -506,8 +624,8 @@ export default {
                         return arr;
                     })  .reduce((prev, curr) => prev.concat(curr), []),
                     
-                    taskResultsh,
-                    ...taskResults
+                    equipCharh,
+                    ...equipChar
                     .map((string) => {
                         const arr = [];
                         const bulletPoints = this.splitParagraphIntoStrings(string);
@@ -519,28 +637,52 @@ export default {
                         return arr;
                     })  .reduce((prev, curr) => prev.concat(curr), []),
 
-                    conclusionh,
-                    ...conclusion
+                    progCharh,
+                    ...progChar
                     .map((string) => {
                         const arr = [];
                         const bulletPoints = this.splitParagraphIntoStrings(string);
                         //console.log(bulletPoints)
                         bulletPoints.forEach((bulletPoint) => {
                             arr.push(this.createTextLine(bulletPoint));
+                        });
+                        //console.log(arr)
+                        return arr;
+                    })  .reduce((prev, curr) => prev.concat(curr), []),
+
+                    resulth,
+                    ...result
+                    .map((string) => {
+                        const arr = [];
+                        const bulletPoints = this.splitParagraphIntoStrings(string);
+                        //console.log(bulletPoints)
+                        bulletPoints.forEach((bulletPoint) => {
+                            arr.push(this.createTextLine(bulletPoint));
+                        });
+                        //console.log(arr)
+                        return arr;
+                    })  .reduce((prev, curr) => prev.concat(curr), []),
+
+                    lith,
+                    ...lit
+                    .map((string) => {
+                        const arr = [];
+                        const bulletPoints = this.splitParagraphIntoStrings(string);
+                        //console.log(bulletPoints)
+                        bulletPoints.forEach((bulletPoint) => {
+                            arr.push(this.createLitLine(bulletPoint));
                         });
                         //console.log(arr)
                         return arr;
                     })  .reduce((prev, curr) => prev.concat(curr), []),
                     ]
-            })  
-
-             Packer.toBlob(doc).then(blob => {
+            })          
+            
+            Packer.toBlob(doc).then(blob => {
                 //console.log(this.fname)
                 saveAs(blob,'report_' + this.student.login + '.docx' );
             });
-
-      }
-
+        }
 
     }
 
