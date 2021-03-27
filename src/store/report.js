@@ -33,9 +33,9 @@ export default {
             }
         },
 
-        async UpdateByNIR({ commit, dispatch }, { pid, log, conclusion, dataCodeTask, programmingTask, taskResults }) {
+        async UpdateByNIR({ commit, dispatch }, { pid, log, conclusion, pracRes, pracPlan, prTask, placeDesc }) {
             try {
-                await firebase.database().ref(`/pracByNIR/${pid}/`).child(log).update({ conclusion, dataCodeTask, programmingTask, taskResults })
+                await firebase.database().ref(`/pracByNIR/${pid}/`).child(log).update({ conclusion, pracRes, pracPlan, prTask, placeDesc })
                 console.log('updateByNIR')
             } catch (e) {
                 commit('setError', e)

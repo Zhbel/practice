@@ -179,9 +179,6 @@
 import xlsx from "xlsx";
 import CyrillicToTranslit from 'cyrillic-to-translit-js';
 
-import html2canvas from "html2canvas"
-
-
 export default {
 
   
@@ -218,7 +215,9 @@ export default {
     },
 
     async selGr() {
+      
       this.students = await this.$store.dispatch('getStudGr', this.currentGr)
+      
       //console.log(this.students)
       if (this.students.length != 0){
       this.loadTable = true
@@ -228,6 +227,7 @@ export default {
         this.loadPreview = false
         this.textinfo = 'В данной группе нет студентов'
       }
+      
     },
 
     add() {
@@ -472,8 +472,6 @@ export default {
 }
 .ui-card.student{
   width: 24%;
-  margin-bottom: 2%;
-  margin-left: 1%;
 }
 .ui-text-smaller.table{
   color: #000;

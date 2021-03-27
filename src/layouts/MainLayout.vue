@@ -38,6 +38,48 @@ export default {
 </script>
 
 <style lang="scss">
+@media screen and (max-device-width: 480px) and (orientation: portrait){
+  .ui-card.group{
+  width: 40% !important;
+  margin-bottom: 2%;
+  margin-left: 1%;
+}
+  .ui-card.prac{
+  width: 40% !important;
+  margin-bottom: 2%;
+  margin-left: 1%;
+}
+.ui-card.head{
+  width: 70% !important;
+  margin-bottom: 2%;
+  margin-left: 1%;
+}
+}
+
+@media screen and (max-device-width: 640px) and (orientation: landscape){
+  .ui-card.group{
+  width: 40% !important;
+  margin-bottom: 2%;
+  margin-left: 1%;
+}
+  .ui-card.prac{
+  width: 40% !important;
+  margin-bottom: 2%;
+  margin-left: 1%;
+}
+.ui-card.head{
+  width: 70% !important;
+  margin-bottom: 2%;
+  margin-left: 1%;
+}
+}
+.ui-card {
+  margin: 1%;
+  white-space: pre-line;
+  overflow: auto;
+  text-overflow: ellipsis;
+}
+
 .button.button-light{
   margin-right: 5%;
 }
@@ -92,5 +134,8 @@ td {
 }
 table {
    table-layout:fixed;
+}
+.ui-messageBox.edit{
+  width: 50%;
 }
 </style>

@@ -113,7 +113,8 @@ export default {
   background-color: #DCDFE6;
 }
 .ui-card{
-  width: 60%;
+  width: 60% !important;
+  align-content: center;
   margin: 0 auto;
 }
 </style>

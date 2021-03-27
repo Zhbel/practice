@@ -92,9 +92,10 @@ export default {
                 await firebase.database().ref(`/pracByNIR/${tmpByNIR.pid}/${tmpByNIR.log}/`).set({
                         sid: tmpByNIR.sid,
                         pid: tmpByNIR.pid,
-                        taskResults: '',
-                        dataCodeTask: '',
-                        programmingTask: '',
+                        placeDesc: '',
+                        prTask: '',
+                        pracPlan: '',
+                        pracRes: '',
                         conclusion: '',
                     })
                     //  console.log('addByNIR')

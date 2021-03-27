@@ -88,7 +88,7 @@
 
         <!--Message Box Edit-->
         <div class="ui-messageBox__wrapper" v-if="EditButton"  style="display: flex;">
-            <div class="ui-messageBox fadeInDown group" @click.stop="">
+            <div class="ui-messageBox fadeInDown edit" @click.stop="">
              <div class="ui-messageBox__header"><span class="messageBox-title">Редактирование практики</span>
              <span class="button-close ui-messageBox-close" @click="cancelEdit"></span></div>
              <div class="ui-messageBox__content"><span>Название</span>
@@ -166,7 +166,6 @@ import DatePicker from '@sum.cumo/vue-datepicker'
 import { format, parse } from "date-fns";
 import '@sum.cumo/vue-datepicker/dist/vuejs-datepicker.css'
 
-
 import {ru} from 'vuejs-datepicker/dist/locale'
 
 export default {
@@ -205,16 +204,16 @@ export default {
         id: '',
       },
       /*edlvls: [
-        {title: 'Учебная ознакомительная практика', edlvl: 'Бакалавриат', tablename: 'pracByop', id: 'b1'},
-        {title: 'Учебная НИР', edlvl: 'Бакалавриат', tablename: 'pracByNIR', id: 'b2'},
-        {title: 'Производственно-технологическая практика', edlvl: 'Бакалавриат', tablename: 'pracBptp', id: 'b3'},
-        {title: 'Преддипломная практика', edlvl: 'Бакалавриат', tablename: 'pracBpdp', id: 'b4'},
-        {title: 'Учебная ознакомительная практика', edlvl: 'Магистратура', tablename: 'pracMyop', id: 'm1'},
-        {title: 'Производственная НИР', edlvl: 'Магистратура', tablename: 'pracMpNIR', id: 'm2'},
-        {title: 'Производственно-технологическая практика', edlvl: 'Магистратура', tablename: 'pracMptp', id: 'm3'},
-        {title: 'НИП', edlvl: 'Аспирантура', tablename: 'pracAnip', id: 'a1'},
-        {title: 'Научное исследование', edlvl: 'Аспирантура', tablename: 'pracAni', id: 'a2'},
-        {title: 'Педагогическая практика', edlvl: 'Аспирантура', tablename: 'pracApp', id: 'a3'},
+        {title: 'Учебная ознакомительная практика', edlvl: 'Бакалавриат', tablename: 'pracByop', type: 'учебная', id: 'b1',},
+        {title: 'Учебная НИР', edlvl: 'Бакалавриат', tablename: 'pracByNIR', type: 'учебная', id: 'b2'},
+        {title: 'Производственно-технологическая практика', edlvl: 'Бакалавриат', tablename: 'pracBptp', type: 'производственная', id: 'b3'},
+        {title: 'Преддипломная практика', edlvl: 'Бакалавриат', tablename: 'pracBpdp', type: 'преддипломная', id: 'b4'},
+        {title: 'Учебная ознакомительная практика', edlvl: 'Магистратура', tablename: 'pracMyop', type: 'учебная', id: 'm1'},
+        {title: 'Производственная НИР', edlvl: 'Магистратура', tablename: 'pracMpNIR', type: 'производственная', id: 'm2'},
+        {title: 'Производственно-технологическая практика', edlvl: 'Магистратура', tablename: 'pracMptp', type: 'производственная', id: 'm3'},
+        {title: 'НИП', edlvl: 'Аспирантура', tablename: 'pracAnip', type: '', id: 'a1'},
+        {title: 'Научное исследование', edlvl: 'Аспирантура', tablename: 'pracAni', type: '', id: 'a2'},
+        {title: 'Педагогическая практика', edlvl: 'Аспирантура', tablename: 'pracApp', type: '', id: 'a3'},
       ],*/
        edlvls: []
     }
@@ -440,7 +439,5 @@ export default {
 }
 .ui-card.prac{
   width: 30%;
-  margin-bottom: 2%;
-  margin-left: 1%;
 }
 </style>

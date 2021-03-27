@@ -95,7 +95,6 @@ export default {
             day.date = this.customFormatter(day.date, 0)
             //console.log(day)
         });
-
         //this.report = await this.$store.dispatch('getAniByID', this.idRep)
         //this.student = await this.$store.dispatch('getStudById', this.report.sid)
         //console.log(this.ref)

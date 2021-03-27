@@ -5,10 +5,14 @@ import './registerServiceWorker'
 import router from './router'
 import store from './store'
 import messagePlugin from '@/utils/message.plugin'
-import VueSimpleMarkdown from 'vue-simple-markdown'
-import 'vue-simple-markdown/dist/vue-simple-markdown.css'
-//import VueLaTeX2JS from 'latex2vue';
 
+
+// import Loading from 'vue-loading-overlay';
+// import 'vue-loading-overlay/dist/vue-loading.css';
+// import Loader from '@/components/app/Loader'
+
+// import VueSimpleMarkdown from 'vue-simple-markdown'
+// import 'vue-simple-markdown/dist/vue-simple-markdown.css'
 
 import firebase from 'firebase/app'
 import 'firebase/auth'
@@ -18,8 +22,11 @@ Vue.config.productionTip = false
 
 Vue.use(Vuelidate)
 Vue.use(messagePlugin)
-Vue.use(VueSimpleMarkdown)
-    //Vue.use(VueLaTeX2JS);
+    //Vue.use(Loading);
+
+//Vue.component('Loader', Loader)
+
+//Vue.use(VueLaTeX2JS);
 
 firebase.initializeApp({
     apiKey: "AIzaSyBAQnNX_8mTXNNZYm-YPMtZBzb-G_ilg_Q",

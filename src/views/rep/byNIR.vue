@@ -7,12 +7,14 @@
         <div class="content-wrapper">
           <p class="ui-title-4 center">{{prac.type}}: Отчет</p>
           <p class="ui-title-4 center">{{student.fname}}</p>
-          <p>Программирование:</p>
-          <textarea v-model="report.programmingTask" class="textarea"></textarea>
-          <p>Кодирование данных:</p>
-          <textarea v-model="report.dataCodeTask" class="textarea"></textarea>
-          <p>Результаты выполнения тестовых заданий:</p>
-          <textarea v-model="report.taskResults" class="textarea"></textarea>
+          <p>Описание места прохождения практики:</p>
+          <textarea v-model="report.placeDesc" class="textarea"></textarea>
+          <p>Постановка задачи от предприятия:</p>
+          <textarea v-model="report.prTask" class="textarea"></textarea>
+          <p>План работы на практику:</p>
+          <textarea v-model="report.pracPlan" class="textarea"></textarea>
+          <p>Результаты прохождения практики:</p>
+          <textarea v-model="report.pracRes" class="textarea"></textarea>
           <p>Выводы по практике:</p>
           <textarea v-model="report.conclusion" class="textarea"></textarea>
           <div class="row">
@@ -38,6 +40,7 @@ export default {
         group: '',
         prac: '',
         head: '',
+        ref: '',
         short_sname: '',
         short_hname: '',
         jobname: ''
@@ -64,6 +67,7 @@ export default {
         this.year = new Date().getFullYear()
         this.prac = await this.$store.dispatch('getPracById', this.report.pid)
         this.head = await this.$store.dispatch('getHeadById', this.prac.pid)
+        this.ref = await this.$store.dispatch('getRefById', {pid, sid})
 
 
         this.short_sname = this.initials(this.student.fname)
@@ -129,7 +133,7 @@ export default {
         createDoc(){
             //console.log('create doc')
 
-            if(this.report.conclusion == "" || this.report.dataCodeTask == "" || this.report.programmingTask == "" || this.report.taskResults == ""){
+            if(this.report.conclusion == "" || this.report.pracRes == "" || this.report.pracPlan == "" || this.report.prTask == "" || this.report.placeDesc == ""){
             this.$message("Заполните все поля перед созданием документа")
             return
           }
@@ -231,7 +235,7 @@ export default {
                   children: [
                     new TextRun( {
                     text: "Студент гр. " + this.group.title + "\t\t_________________________ " + this.short_sname,
-                    break: 8,
+                    break: 6,
                     }),
 
                     new TextRun( {
@@ -240,6 +244,16 @@ export default {
                     font: "Times New Roman",
                     size: 16,
                     break: 1,
+                    }),
+
+                    new TextRun( {
+                    text: "Место прохождения практики \t\t\t\t",
+                    break: 2,
+                    }),
+
+                    new TextRun( {
+                    text: this.ref.pracbase,
+                    underline: {}
                     }),
 
                     new TextRun( {
@@ -351,15 +365,15 @@ export default {
             //         ]
             // });
 
-             let programmingTask = this.splitLines(this.report.programmingTask)
-            const programmingTaskh = new Paragraph({
+             let placeDesc = this.splitLines(this.report.placeDesc)
+            const placeDesch = new Paragraph({
                   spacing: {
                             line: 360,
                             after: 200,
                         },
                   pageBreakBefore: true,
                   alignment: AlignmentType.LEFT,
-                  text: "\t1\tПрограммирование",
+                  text: "\t1\tОписание места прохождения практики",
                   style: "HeadingCustom",
                   // children: [
                   //   new TextRun( {
@@ -370,15 +384,15 @@ export default {
                   // ]
             });
 
-            let dataCodeTask = this.splitLines(this.report.dataCodeTask)
-            const dataCodeTaskh = new Paragraph({
+            let prTask = this.splitLines(this.report.prTask)
+            const prTaskh = new Paragraph({
                   spacing: {
                             line: 360,
                             after: 200,
                         },
                   pageBreakBefore: true,
                   alignment: AlignmentType.LEFT,
-                  text: '\t2\tКодирование данных',
+                  text: '\t2\tПостановка задачи от предприятия',
                   style: "HeadingCustom",
                   // children: [
                   //   new TextRun( {
@@ -389,19 +403,38 @@ export default {
                   // ]
             });
 
-            let taskResults = this.splitLines(this.report.taskResults)
-            const taskResultsh = new Paragraph({
+            let pracPlan = this.splitLines(this.report.pracPlan)
+            const pracPlanh = new Paragraph({
                   spacing: {
                             line: 360,
                             after: 200,
                         },
                   pageBreakBefore: true,
                   alignment: AlignmentType.LEFT,
-                  text: '\t3\tРезультаты выполнения тестовых заданий',
+                  text: '\t3\tПлан работы на практику',
                   style: "HeadingCustom",
                   // children: [
                   //   new TextRun( {
                   //   text: '\t3\tРезультаты выполнения тестовых заданий',
+                  //   style: "HeadingCustom",
+                  //   //break: 1,
+                  //   }),
+                  // ]
+            });
+
+            let pracRes = this.splitLines(this.report.pracRes)
+            const pracResh = new Paragraph({
+                  spacing: {
+                            line: 360,
+                            after: 200,
+                        },
+                  pageBreakBefore: true,
+                  alignment: AlignmentType.LEFT,
+                  text: '\t4\tРезультаты прохождения практики',
+                  style: "HeadingCustom",
+                  // children: [
+                  //   new TextRun( {
+                  //   text: '\t4\tВыводы по практике',
                   //   style: "HeadingCustom",
                   //   //break: 1,
                   //   }),
@@ -416,7 +449,7 @@ export default {
                         },
                   pageBreakBefore: true,
                   alignment: AlignmentType.LEFT,
-                  text: '\t4\tВыводы по практике',
+                  text: '\t5\tВыводы по практике',
                   style: "HeadingCustom",
                   // children: [
                   //   new TextRun( {
@@ -471,8 +504,8 @@ export default {
                     toc,
                     //content,
 
-                    programmingTaskh,
-                    ...programmingTask
+                    placeDesch,
+                    ...placeDesc
                     .map((string) => {
                         const arr = [];
                         const bulletPoints = this.splitParagraphIntoStrings(string);
@@ -484,8 +517,8 @@ export default {
                         return arr;
                     })  .reduce((prev, curr) => prev.concat(curr), []),
 
-                    dataCodeTaskh,
-                    ...dataCodeTask
+                    prTaskh,
+                    ...prTask
                     .map((string) => {
                         const arr = [];
                         const bulletPoints = this.splitParagraphIntoStrings(string);
@@ -497,8 +530,21 @@ export default {
                         return arr;
                     })  .reduce((prev, curr) => prev.concat(curr), []),
                     
-                    taskResultsh,
-                    ...taskResults
+                    pracPlanh,
+                    ...pracPlan
+                    .map((string) => {
+                        const arr = [];
+                        const bulletPoints = this.splitParagraphIntoStrings(string);
+                        //console.log(bulletPoints)
+                        bulletPoints.forEach((bulletPoint) => {
+                            arr.push(this.createTextLine(bulletPoint));
+                        });
+                        //console.log(arr)
+                        return arr;
+                    })  .reduce((prev, curr) => prev.concat(curr), []),
+
+                    pracResh,
+                    ...pracRes
                     .map((string) => {
                         const arr = [];
                         const bulletPoints = this.splitParagraphIntoStrings(string);

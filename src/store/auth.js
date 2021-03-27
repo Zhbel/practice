@@ -31,6 +31,19 @@ export default {
             }
         },
 
+        async changePass({ dispatch, commit }, { login, oldpassword, newpassword }) {
+            try {
+                login = login + '@practice.vtik'
+                await firebase.auth().signInWithEmailAndPassword(login, oldpassword)
+                const user = firebase.auth().currentUser
+                user.updatePassword(newpassword)
+                console.log('pass update')
+            } catch (e) {
+                commit('setError', e)
+                throw e
+            }
+        },
+
         getUid() {
             const user = firebase.auth().currentUser
             return user ? user.uid : null

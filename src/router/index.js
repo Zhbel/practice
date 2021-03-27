@@ -3,8 +3,10 @@ import VueRouter from 'vue-router'
 import Uimini from 'uimini/dist/css/uimini.css'
 import VueToast from 'vue-toast-notification'
 import Vuetify from 'vuetify'
-import 'vue-toast-notification/dist/theme-default.css';
+import firebase from 'firebase/app'
 
+import 'vue-toast-notification/dist/theme-default.css';
+import loader from '@/utils/loader'
 
 
 Vue.use(VueRouter)
@@ -31,7 +33,7 @@ const routes = [{
     {
         path: '/stud',
         name: 'stud',
-        meta: { layout: 'main' },
+        meta: { layout: 'main', auth: true },
         component: () =>
             import ('../views/Stud.vue')
     },
@@ -39,7 +41,7 @@ const routes = [{
     {
         path: '/pstud',
         name: 'pstud',
-        meta: { layout: 'main' },
+        meta: { layout: 'main', auth: true, head: true },
         component: () =>
             import ('../views/PractStud.vue'),
     },
@@ -55,7 +57,7 @@ const routes = [{
     {
         path: '/head',
         name: 'head',
-        meta: { layout: 'main' },
+        meta: { layout: 'main', auth: true, head: true },
         component: () =>
             import ('../views/Head.vue')
     },
@@ -63,7 +65,7 @@ const routes = [{
     {
         path: '/group',
         name: 'group',
-        meta: { layout: 'main' },
+        meta: { layout: 'main', auth: true, head: true },
         component: () =>
             import ('../views/Group.vue')
     },
@@ -71,7 +73,7 @@ const routes = [{
     {
         path: '/students',
         name: 'students',
-        meta: { layout: 'main' },
+        meta: { layout: 'main', auth: true, head: true },
         component: () =>
             import ('../views/Students.vue')
     },
@@ -79,7 +81,7 @@ const routes = [{
     {
         path: '/practice',
         name: 'practice',
-        meta: { layout: 'main' },
+        meta: { layout: 'main', auth: true, head: true },
         component: () =>
             import ('../views/Practice.vue')
     },
@@ -87,7 +89,7 @@ const routes = [{
     {
         path: '/rep/byop',
         name: 'rep/byop',
-        meta: { layout: 'main' },
+        meta: { layout: 'main', auth: true },
         component: () =>
             import ('../views/rep/byop.vue')
     },
@@ -95,7 +97,7 @@ const routes = [{
     {
         path: '/rep/byNIR',
         name: 'rep/byNIR',
-        meta: { layout: 'main' },
+        meta: { layout: 'main', auth: true },
         component: () =>
             import ('../views/rep/byNIR.vue')
     },
@@ -103,7 +105,7 @@ const routes = [{
     {
         path: '/rep/bptp',
         name: 'rep/bptp',
-        meta: { layout: 'main' },
+        meta: { layout: 'main', auth: true },
         component: () =>
             import ('../views/rep/bptp.vue')
     },
@@ -111,7 +113,7 @@ const routes = [{
     {
         path: '/rep/bpdp',
         name: 'rep/bpdp',
-        meta: { layout: 'main' },
+        meta: { layout: 'main', auth: true },
         component: () =>
             import ('../views/rep/bpdp.vue')
     },
@@ -119,7 +121,7 @@ const routes = [{
     {
         path: '/rep/myop',
         name: 'rep/myop',
-        meta: { layout: 'main' },
+        meta: { layout: 'main', auth: true },
         component: () =>
             import ('../views/rep/myop.vue')
     },
@@ -127,7 +129,7 @@ const routes = [{
     {
         path: '/rep/mpNIR',
         name: 'rep/mpNIR',
-        meta: { layout: 'main' },
+        meta: { layout: 'main', auth: true },
         component: () =>
             import ('../views/rep/mpNIR.vue')
     },
@@ -135,7 +137,7 @@ const routes = [{
     {
         path: '/rep/mptp',
         name: 'rep/mptp',
-        meta: { layout: 'main' },
+        meta: { layout: 'main', auth: true },
         component: () =>
             import ('../views/rep/mptp.vue')
     },
@@ -143,7 +145,7 @@ const routes = [{
     {
         path: '/rep/anip',
         name: 'rep/anip',
-        meta: { layout: 'main' },
+        meta: { layout: 'main', auth: true },
         component: () =>
             import ('../views/rep/anip.vue')
     },
@@ -151,7 +153,7 @@ const routes = [{
     {
         path: '/rep/ani',
         name: 'rep/ani',
-        meta: { layout: 'main' },
+        meta: { layout: 'main', auth: true },
         component: () =>
             import ('../views/rep/ani.vue')
     },
@@ -159,7 +161,7 @@ const routes = [{
     {
         path: '/rep/app',
         name: 'rep/app',
-        meta: { layout: 'main' },
+        meta: { layout: 'main', auth: true },
         component: () =>
             import ('../views/rep/app.vue')
     },
@@ -175,7 +177,7 @@ const routes = [{
     {
         path: '/ref',
         name: 'ref',
-        meta: { layout: 'main' },
+        meta: { layout: 'main', auth: true },
         component: () =>
             import ('../views/Ref.vue')
     },
@@ -183,7 +185,7 @@ const routes = [{
     {
         path: '/pd',
         name: 'pd',
-        meta: { layout: 'main' },
+        meta: { layout: 'main', auth: true },
         component: () =>
             import ('../views/pd.vue')
     }
@@ -196,5 +198,36 @@ const router = new VueRouter({
     base: process.env.BASE_URL,
     routes
 })
+
+router.beforeResolve((to, from, next) => {
+    if (to.path) {
+        loader.loaderStart()
+    }
+    next()
+});
+router.beforeEach(async(to, from, next) => {
+    const currentUser = firebase.auth().currentUser
+    const requireAuth = to.matched.some(record => record.meta.auth)
+    const requireAdmin = to.matched.some(record => record.meta.head)
+
+    if (requireAuth && !currentUser) {
+        next('/login?message=login')
+    } else if (requireAuth && requireAdmin) {
+        //console.log(currentUser)
+        let user = (await firebase.database().ref(`/pHead/${currentUser.uid}/`).once('value')).val() || {}
+            // console.log(Object.keys(this.user).length)
+            //console.log(this.user.length)
+        if (Object.keys(user).length != 0) {
+            next()
+        } else {
+            next('/stud?error=rights')
+        }
+    } else next()
+})
+router.afterEach((to, from) => {
+    setTimeout(function() {
+        loader.loaderEnd();
+    }, 888);
+});
 
 export default router

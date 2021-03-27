@@ -24,7 +24,8 @@ export default {
                 await firebase.database().ref(`/pracList/${edlvl.id}/`).set({
                     title: edlvl.title,
                     edlvl: edlvl.edlvl,
-                    tablename: edlvl.tablename
+                    tablename: edlvl.tablename,
+                    type: edlvl.type
                 })
             } catch (e) {
                 commit('setError', e)
@@ -36,6 +37,24 @@ export default {
             try {
                 const pList = (await firebase.database().ref(`/pracList/`).once('value')).val() || {}
                 return Object.keys(pList).map(key => ({...pList[key], id: key }))
+            } catch (e) {
+                commit('setError', e)
+                throw e
+            }
+        },
+
+        async getPracListByType({ commit, dispatch }, type) {
+            try {
+                const pList = await dispatch('getPracList')
+                    //Object.keys(pList).map(key => ({...pList[key], id: key }))
+                let itemR = ''
+                pList.forEach(item => {
+                    if (item.title == type)
+                        itemR = item.type
+                });
+                //console.log(itemR)
+                return itemR
+
             } catch (e) {
                 commit('setError', e)
                 throw e
@@ -166,7 +185,16 @@ export default {
                     pracTaskRes: '',
                     studChar: '',
                     comment: '',
-                    recomend: ''
+                    recomend: '',
+                    faculty: '',
+                    Uhead: '',
+                    headPosition: '',
+                    headPositionD: '',
+                    pracResultD: '',
+                    pracTaskResD: '',
+                    studCharD: '',
+                    commentD: '',
+                    recomendD: ''
                 })
                 console.log('addRef')
                     //return Object.keys(practice).map(key => ({...practice[key], id: key }))
@@ -190,9 +218,9 @@ export default {
             }
         },
 
-        async UpdateRef({ commit, dispatch }, { pid, log, city, comment, contractDate, contractNum, dean, listGraph, listMat, order, orderdate, pracHead, pracResult, pracTaskRes, pracbase, prodObj, recomend, refNum, studChar, theme, univYear }) {
+        async UpdateRef({ commit, dispatch }, { pid, log, city, comment, contractDate, contractNum, dean, listGraph, listMat, order, orderdate, pracHead, pracResult, pracTaskRes, pracbase, prodObj, recomend, refNum, studChar, theme, univYear, faculty, Uhead, headPosition, headPositionD, pracResultD, pracTaskResD, studCharD, commentD, recomendD }) {
             try {
-                await firebase.database().ref(`/referral/${pid}/`).child(log).update({ city, comment, contractDate, contractNum, dean, listGraph, listMat, order, orderdate, pracHead, pracResult, pracTaskRes, pracbase, prodObj, recomend, refNum, studChar, theme, univYear })
+                await firebase.database().ref(`/referral/${pid}/`).child(log).update({ city, comment, contractDate, contractNum, dean, listGraph, listMat, order, orderdate, pracHead, pracResult, pracTaskRes, pracbase, prodObj, recomend, refNum, studChar, theme, univYear, faculty, Uhead, headPosition, headPositionD, pracResultD, pracTaskResD, studCharD, commentD, recomendD })
                 console.log('updateRef')
             } catch (e) {
                 commit('setError', e)

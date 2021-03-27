@@ -5,10 +5,10 @@
             <div class="container">
               <div class="navbar-content">
                 <a class="header-logo" v-bind:href="mainLink">Practice System</a>
-                <div class="button-burger">
-                  <span class="line line-1"></span>
-                </div>
-                <div class="navbar-list__wrapper">
+                <div class="button-burger" @click="menuShow = !menuShow" :class="{ active: menuShow }">
+                  <span class="line line-1"></span><span class="line line-2"></span><span class="line line-3"></span>
+                  </div>
+            <div class="navbar-list__wrapper" :class="{ active: menuShow }">
                   <ul class="navbar-list">
                     <router-link
                         v-for="link in links"
@@ -16,7 +16,7 @@
                         tag="li"
                         active-class="active"
                         :to="link.url">
-                      <li class="navbar-item">
+                      <li class="navbar-item" @click="menuShow = false">
                        <a class="navbar-link" href="#">{{ link.title }}</a></li>
                       </router-link>
                       <li class="navbar-item">
@@ -30,6 +30,7 @@
 </template>
 
 <script>
+
 export default {
 
   async mounted(){
@@ -70,6 +71,7 @@ export default {
   },
   data: () => ({
     user_rights: false,
+    menuShow: false,
     mainLink: '',
    /* links: [ 
              {title: 'Группы', url: '/group' },

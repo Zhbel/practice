@@ -389,8 +389,6 @@ export default {
 }
 .ui-card.prac{
   width: 30%;
-  margin-bottom: 2%;
-  margin-left: 1%;
 }
 .button.openprc{
   display: block;

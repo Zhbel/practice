@@ -51,6 +51,10 @@ export default {
       if (messages[this.$route.query.message]){
         this.$message(messages[this.$route.query.message])
       }
+
+      if (messages[this.$route.query.error]){
+        this.$error(messages[this.$route.query.error])
+      }
     },
 
     methods: {
@@ -93,9 +97,11 @@ export default {
 
 .wrapper.login{
   background-color: #DCDFE6;
+  align-content: center;
 }
 .ui-card{
-  width: 60%;
+  width: 60% !important;
+  align-content: center;
   margin: 0 auto;
 }
 </style>

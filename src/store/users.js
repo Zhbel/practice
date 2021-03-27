@@ -50,6 +50,17 @@ export default {
             }
         },
 
+        async updateHeadPass({ commit, dispatch }, { fname, depart, abbr, login, password, ds }) {
+            try {
+                const uid = await dispatch('getUid')
+                await firebase.database().ref(`/pHead/`).child(uid).update({ fname, depart, abbr, login, password, ds })
+                    //console.log('updateHead after update')
+            } catch (e) {
+                commit('setError', e)
+                throw e
+            }
+        },
+
         async registerStud({ dispatch, commit }, student) {
             var config = {
                 apiKey: "AIzaSyBAQnNX_8mTXNNZYm-YPMtZBzb-G_ilg_Q",

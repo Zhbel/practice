@@ -57,6 +57,7 @@
 
 <script>
 import { format, parse } from "date-fns";
+import messages from '@/utils/messages'
 
 export default {
     data: () => ({
@@ -83,6 +84,13 @@ export default {
     }),
     
     async mounted(){
+      if (messages[this.$route.query.message]){
+        this.$message(messages[this.$route.query.message])
+      }
+
+      if (messages[this.$route.query.error]){
+        this.$error(messages[this.$route.query.error])
+      }
        var sid = await this.$store.dispatch('getUid')
        this.stud = await this.$store.dispatch('getStudId'),
        Object.assign(this.stud, {id: sid});
@@ -386,12 +394,8 @@ export default {
 <style lang="scss">
 .ui-card.prac{
   width: 30%;
-  margin-bottom: 2%;
-  margin-left: 1%;
 }
 .ui-card.head{
-  margin-top: 2%;
-  margin-bottom: 2%;
   max-width: max-content;
 }
 .openPrac{
