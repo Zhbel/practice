@@ -7,9 +7,10 @@
           <p class="ui-title-4 center"> Группы </p>
           <div class="row">
           <button class="button button--round button-primary" v-on:click="addGr">Добавить</button>
+          <button class="button button-default prof" v-on:click="profList()">Направления (специальности)</button>
           </div>
           <!--Selector-->
-
+          <div class="row">
           <select class="GroupField" v-model="currentLvl">
            <!-- <option value = -1 >Выберите уровень</option> -->
             <option 
@@ -17,6 +18,8 @@
             v-bind:key= edlvl.title
           v-bind:value="edlvl.title"> {{edlvl.title}}</option>
           </select>
+          
+          </div>
          <!--Selector-->
         <!--Group Card-->
           <div class="row">
@@ -33,7 +36,7 @@
                         <div class="row">
                         <button class="button button-warning edit" v-on:click="editGroup(group)">Редактировать</button>
                         <button class="button button-light truncate" v-on:click="truncGroup(group)">Очистить</button>
-                        <button class="button button-warning delete" v-on:click="removeGroup(group)">Удалить</button>
+                        <button class="button button-warning delete" v-on:click="areUSureGrDel(group)">Удалить</button>
                       </div>
                     </div>
                     </div> 
@@ -48,9 +51,18 @@
              <div class="ui-messageBox__content"><span>Название</span>
              <input type="text" v-model="title" @keyup.esc="cancelAdd"/>
              <span>Направление/Специальность</span>
-             <input type="text" v-model="spec" @keyup.esc="cancelAdd"/>
+              <!--Selector-->
+              <select v-model="spec">
+              <option 
+               v-for="spec in specArr"
+              v-bind:key= spec.id
+              v-bind:value="spec"
+               > {{spec.spec}}</option>
+              </select>
              <span>Профиль</span>
-             <input type="text" v-model="profile" @keyup.esc="cancelAdd"/>
+             <br>
+             <textarea readonly type="text" v-model="spec.profile" @keyup.esc="cancelEdit" class="textarea"/>
+             <br>
              <span>Уровень образования</span>
              <!--Selector-->
               <select @change="lvlSelect($event)">
@@ -77,10 +89,21 @@
              <span class="button-close ui-messageBox-close" @click="cancelEdit"></span></div>
              <div class="ui-messageBox__content"><span>Название</span>
              <input type="text" v-model="title" @keyup.esc="cancelEdit"/>
+             <!--<span>Направление/Специальность</span>
+             <input type="text" v-model="spec" @keyup.esc="cancelEdit"/> -->
              <span>Направление/Специальность</span>
-             <input type="text" v-model="spec" @keyup.esc="cancelEdit"/>
+              <!--Selector-->
+              <select v-model="spec">
+              <option 
+               v-for="spec in specArr"
+              v-bind:key= spec.id
+              v-bind:value="spec"
+               > {{spec.spec}}</option>
+              </select>
              <span>Профиль</span>
-             <input type="text" v-model="profile" @keyup.esc="cancelEdit"/>
+             <br>
+             <textarea readonly type="text" v-model="spec.profile" @keyup.esc="cancelEdit" class="textarea"/>
+             <br>
              <span>Уровень образования</span>
              <!--Selector-->
               <select v-model="edlevel">
@@ -115,6 +138,84 @@
               </div>
           <!--Message Box-->
 
+
+          <!--Message Box-->
+        <div class="ui-messageBox__wrapper" v-if="delBox"  style="display: flex;">
+            <div class="ui-messageBox fadeInDown group" @click.stop="">
+             <div class="ui-messageBox__header"><span class="messageBox-title">Внимание!</span>
+             <span class="button-close ui-messageBox-close" @click="CancelGrDel"></span></div>
+             <div class="ui-messageBox__content"><span>Вы желаете удалить группу {{groupD.title}} из системы?</span>
+             <!--Selector-->
+             </div>
+              <div class="ui-messageBox__footer">
+              <div class="button button-light ui-messageBox-cancel" @click="CancelGrDel">Нет</div>
+              <div class="button button-primary ui-messageBox-ok" @click="FinishGrDel">Да</div>
+              </div>
+              </div>
+              </div>
+          <!--Message Box-->
+
+
+          <!--Message Box PracList-->
+            <div class="ui-messageBox__wrapper" v-if="showList"  style="display: flex;">
+            <div class="ui-messageBox fadeInDown group" @click.stop="">
+             <div class="ui-messageBox__header">
+               <span class="messageBox-title">Список направлений
+               </span>         
+             <span class="button-close ui-messageBox-close" @click="cancelList"></span></div>
+               <!--Selector-->
+
+              <select v-model="currentSpec">
+              <option 
+               v-for="(spec) in specArr"
+               v-bind:value="spec"
+               v-bind:key= spec.id
+               > {{spec.spec}}</option>
+              </select>
+              <!--Selector-->
+             <div class="ui-messageBox__content">
+              <span>Направление (Специальность)</span>
+             <input type="text" v-model="currentSpec.spec" @keyup.esc="cancelList"/>
+             <span>Профиль</span>
+             <br>
+             <textarea v-model="currentSpec.profile" @keyup.esc="cancelList" class="textarea"></textarea>
+             </div>
+             <div align="right">
+             <div class="button button-default addS" @click="addList">Добавить новое направление</div>
+             </div>
+              <div class="ui-messageBox__footer">
+              <div class="button button-warning delete" @click="deleteList">Удалить</div>
+              <div class="button button-light saveL" @click="finishEditList">Сохранить изменения</div>
+              <div class="button button-light truncate" @click="finishList">Закрыть</div>
+              </div>
+              
+              </div></div>
+              <!--Message Box PracList-->
+
+
+
+              <!--Message Box PracListAd-->
+            <div class="ui-messageBox__wrapper" v-if="showAL"  style="display: flex;">
+            <div class="ui-messageBox fadeInDown group" @click.stop="">
+             <div class="ui-messageBox__header">
+               <span class="messageBox-title">Добавить новое направление
+               </span>         
+             <span class="button-close ui-messageBox-close" @click="cancelLAD"></span></div>
+             <div class="ui-messageBox__content">
+              <span>Направление (Специальность)</span>
+             <input type="text" v-model="specA" @keyup.esc="cancelLAD"/>
+             <span>Профиль</span>
+             <br>
+             <textarea v-model="profA" @keyup.esc="cancelLAD" class="textarea"></textarea>
+             </div>
+              <div class="ui-messageBox__footer">
+              <div class="button button-light truncate" @click="cancelLAD">Отмена</div>
+              <div class="button button-light saveL" @click="finishLAD">Добавить</div>
+              </div>
+              
+              </div></div>
+              <!--Message Box PracListAd-->
+
           </div>
     </body>
 </template>
@@ -130,6 +231,13 @@ export default {
         AddButton: false,
         EditButton: false,
         truncBox: false,
+        delBox: false,
+        showList: false,
+        showAL: false,
+        currentSpec: '',
+        specA: '',
+        profA: '',
+        groupD: '',
         groupT: '',
         title: '',
         spec: '',
@@ -141,7 +249,14 @@ export default {
         edlvls: [ {title: 'Бакалавриат'},
              {title: 'Магистратура'},
              {title: 'Аспирантура'},
-            ]
+            ],
+
+        // specArr: [ {spec: '09.03.01 Информатика и вычислительная техника', profile: 'Программное обеспечение средств вычислительной техники и автоматизированнных систем'},
+        //      {spec: '09.04.01 Информатика и вычислительная техника', profile: 'Информационное и программное обеспечение автоматизированных систем'},
+        //      {spec: '09.04.01 Информатика и вычислительная техника', profile: 'Коммуникационные средства и технологии'},
+        //      {spec: '09.06.01 Информатика и вычислительная техника', profile: 'Математическое моделирование, численные методы и комплексы программ'},
+        //     ]
+        specArr: []
     }),
 
 
@@ -160,13 +275,46 @@ export default {
 
   async mounted(){
     this.groups = await this.$store.dispatch('getGroups')
-    //console.log(this.groups)
+    // this.specArr.forEach(async spec => {
+    //   //console.log(edlvl)
+    //   //console.log(i)
+    //   let id = "spec_" + this.makeid(8)
+    //   Object.assign(spec, {id: id});
+    //   //console.log(spec)
+    //   await this.$store.dispatch('addSpecList', spec)
+    // })
+    
+    this.specArr = await this.$store.dispatch('getSpecList')
+
+    this.specArr.sort((function(a, b){
+      if(a.spec < b.spec) { return -1; }
+      if(a.spec > b.spec) { return 1; }
+      return 0;
+      }))
+    // //console.log(this.groups)
+    // console.log(this.specArr)
     //console.log(this.gr)
   },
 
   
 
   methods:{
+
+    areUSureGrDel(group){
+      this.delBox = true
+      this.groupD = group
+    },
+
+    CancelGrDel(){
+      this.delBox = false
+      this.groupD = ''
+    },
+
+    async FinishGrDel(){
+      await this.removeGroup(this.groupD)
+      this.CancelGrDel()
+    },
+
     async truncGroup(group){
       this.students = await this.$store.dispatch('getStudGr', group.id)
       if( this.students.length == 0){
@@ -197,7 +345,90 @@ export default {
 
     },
 
-    
+    profList(){
+      this.showList = true
+    },
+
+    cancelList(){
+      //console.log(this.currentSpec)
+      this.showList = false
+      this.currentSpec = ''
+    },
+
+
+    async finishEditList(){
+      try{
+        
+        //var oldpracname = this.currentEdlvl.title
+        //console.log(oldpracname)
+        await this.$store.dispatch('editSpecList', this.currentSpec)
+        this.specArr = await this.$store.dispatch('getSpecList')
+        this.specArr.sort((function(a, b){
+        if(a.spec < b.spec) { return -1; }
+        if(a.spec > b.spec) { return 1; }
+        return 0;
+        }))
+        this.$success('Данные успешно обновлены')
+                
+      }catch (e){
+        this.$error('Ошибка при обновлении данных')
+      }
+      
+    },
+
+    finishList(){
+      this.cancelList()
+    },
+
+    async deleteList(){
+      try{
+       await this.$store.dispatch('deleteSpecList', this.currentSpec.id)
+       this.specArr = await this.$store.dispatch('getSpecList')
+       this.specArr.sort((function(a, b){
+      if(a.spec < b.spec) { return -1; }
+      if(a.spec > b.spec) { return 1; }
+      return 0;
+      }))
+       this.$success('Успешно удалено')
+       this.currentSpec = ''
+     }catch(e){
+       this.$error("Ошибка при удалении!")
+     }
+    },
+
+    addList(){
+     this.showAL = true
+    },
+
+    cancelLAD(){
+     this.showAL = false
+     this.profA = ''
+     this.specA = ''
+    },
+
+    async finishLAD(){
+     try{
+       let addSpec = {
+         id:"spec_" + this.makeid(8),
+         spec: this.specA,
+         profile: this.profA
+       }
+       await this.$store.dispatch('addSpecList', addSpec)
+       this.specArr = await this.$store.dispatch('getSpecList')
+       this.specArr.sort((function(a, b){
+        if(a.spec < b.spec) { return -1; }
+        if(a.spec > b.spec) { return 1; }
+        return 0;
+        }))
+       this.$success('Успешно добавлено')
+       this.cancelLAD()
+     }catch(e){
+       this.cancelLAD()
+       this.$error("Ошибка при добавлении!")
+     }
+
+    },
+
     addGr(){
       this.AddButton = true
       this.mboxTitle = 'Добавить группу'
@@ -232,8 +463,17 @@ export default {
 
     editGroup(group){
       this.title = group.title
-      this.spec = group.spec
-      this.profile = group.profile
+      console.log(group)
+      this.specArr.forEach(item => {
+        //console.log(item)
+        if(item.spec == group.spec && item.profile == group.profile)
+        {
+        this.spec = item
+        //console.log(this.spec)
+        }
+      });
+      //this.spec = group.spec
+      //this.profile = group.profile
       this.edlevel = group.edlvl
       this.edID = group.id
       this.mboxTitle = 'Редактировать информацию'
@@ -258,8 +498,8 @@ export default {
       const gr_t = {
         id: this.edID,
         title: this.title,
-        spec: this.spec,
-        profile: this.profile,
+        spec: this.spec.spec,
+        profile: this.spec.profile,
         edlvl: this.edlevel
       }
       try{
@@ -278,8 +518,8 @@ export default {
       const gr = {
         id: "group_" + this.makeid(8),
         title: this.title,
-        spec: this.spec,
-        profile: this.profile,
+        spec: this.spec.spec,
+        profile: this.spec.profile,
         edlvl: this.edlevel
       }
       //console.log(gr)
@@ -331,5 +571,25 @@ export default {
   width: max-content;
   margin-top: 2%;
   margin: 2%;
+}
+.button.saveL{
+  font-size: 85%;
+  width: max-content;
+  margin-top: 2%;
+  margin: 2%;
+  background-color: blue;
 } 
+.button.prof{
+  font-size: 90%;
+  width: max-content;
+  height: max-content;
+}
+
+.button.addS{
+  font-size: 80%;
+  width: max-content;
+  height: max-content;
+  margin-right: 5%;
+  background-color: #C0C4CC;
+}
 </style>

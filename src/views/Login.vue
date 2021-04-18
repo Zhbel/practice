@@ -3,7 +3,7 @@
 <div class="wrapper login">
     <section>
     <form class="container container--small" @submit.prevent="submitLog">
-      <div class="ui-card" >
+      <div class="ui-card login" >
         <p class="ui-title-3 center">Авторизация</p>
          <p class="ui-title-5">Логин</p>
          <br>
@@ -99,8 +99,8 @@ export default {
   background-color: #DCDFE6;
   align-content: center;
 }
-.ui-card{
-  width: 60% !important;
+.ui-card.login{
+  width: 60%;
   align-content: center;
   margin: 0 auto;
 }

@@ -3,7 +3,7 @@
 <div class="wrapper login">
     <section>
     <form class="container container--small" @submit.prevent="submitReg">
-      <div class="ui-card" >
+      <div class="ui-card reg" >
         <p class="ui-title-3 center">Регистрация</p>
          <p class="ui-title-5 title">Логин</p>
          <input type="text" placeholder="Login" width="48"
@@ -112,8 +112,8 @@ export default {
 .wrapper.login{
   background-color: #DCDFE6;
 }
-.ui-card{
-  width: 60% !important;
+.ui-card.reg{
+  width: 60%;
   align-content: center;
   margin: 0 auto;
 }

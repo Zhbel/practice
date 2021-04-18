@@ -55,7 +55,51 @@ export default {
                 commit('setError', e)
                 throw e
             }
-        }
+        },
+
+        async addSpecList({ commit, dispatch }, spec) {
+            try {
+                console.log(spec)
+                await firebase.database().ref(`/specList/${spec.id}/`).set({
+                    spec: spec.spec,
+                    profile: spec.profile,
+                })
+            } catch (e) {
+                commit('setError', e)
+                throw e
+            }
+        },
+
+        async editSpecList({ commit, dispatch }, { id, spec, profile }) {
+            try {
+                await firebase.database().ref(`/specList/`).child(id).update({ spec, profile })
+                    //console.log('updateGp after update')
+            } catch (e) {
+                commit('setError', e)
+                throw e
+            }
+        },
+
+        async deleteSpecList({ commit, dispatch }, id) {
+            try {
+                //console.log(grID)
+                await firebase.database().ref(`/specList/`).child(id).remove()
+                    //console.log('deleted spec')
+            } catch (e) {
+                commit('setError', e)
+                throw e
+            }
+        },
+
+        async getSpecList({ commit, dispatch }) {
+            try {
+                const sList = (await firebase.database().ref(`/specList/`).once('value')).val() || {}
+                return Object.keys(sList).map(key => ({...sList[key], id: key }))
+            } catch (e) {
+                commit('setError', e)
+                throw e
+            }
+        },
 
     }
 }

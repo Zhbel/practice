@@ -178,6 +178,7 @@
 <script>
 import xlsx from "xlsx";
 import CyrillicToTranslit from 'cyrillic-to-translit-js';
+import loader from '@/utils/loader'
 
 export default {
 
@@ -189,7 +190,7 @@ export default {
         login = login.slice(0, login.indexOf(' '))
         login += Math.floor(Math.random() * 10000);
         var password = "psswrd" + Math.floor(Math.random() * 10000);
-        const insstud = {
+        let insstud = {
           login: login,
           password: password,
           fname: student.__EMPTY_1,
@@ -201,13 +202,18 @@ export default {
         this.insertArray.push(insstud)
       });
       try{
+      
       await this.insertArray.forEach(async student => {
         await this.$store.dispatch('registerStud', student)
       })
+      this.$success('Студенты успешно добавлены')
       this.insertArray = []
       this.loadPreview = false
+      this.currentGr = ''
+      this.textinfo = ''
       }
       catch(e){ this.$error('Что-то пошло не так')}
+      
      // this.students = await this.$store.dispatch('getStudGr', this.currentGr)
       //while (Object.keys(this.students).length != 0) { this.students = await this.$store.dispatch('getStudGr', this.currentGr)}
      // this.loadTable = true
@@ -215,9 +221,18 @@ export default {
     },
 
     async selGr() {
-      
+      loader.loaderStart()
       this.students = await this.$store.dispatch('getStudGr', this.currentGr)
-      
+      //console.log(this.currentGr)
+      //console.log(this.students)
+      this.students.sort((function(a, b){
+      if(a.fname < b.fname) { return -1; }
+      if(a.fname > b.fname) { return 1; }
+      return 0;
+      }))
+      setTimeout(function() {
+        loader.loaderEnd();
+      }, 300);
       //console.log(this.students)
       if (this.students.length != 0){
       this.loadTable = true

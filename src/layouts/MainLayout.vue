@@ -73,6 +73,7 @@ export default {
   margin-left: 1%;
 }
 }
+
 .ui-card {
   margin: 1%;
   white-space: pre-line;

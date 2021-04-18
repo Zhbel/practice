@@ -39,7 +39,7 @@
                       <p class="ui-text-regular"><b>Дата окончания: </b> {{prac.dateend}}</p>
                         <div class="row">
                         <button class="button button-warning edit" v-on:click="editPrac(prac)">Редактировать</button>
-                        <button class="button button-warning delete" v-on:click="removePrac(prac)">Удалить</button>
+                        <button class="button button-warning delete" v-on:click="areUSurePrDel(prac)">Удалить</button>
                       </div>
                     </div>
                     </div> 
@@ -153,6 +153,22 @@
               </div></div>
         <!--Message Box PracList-->
 
+          <!--Message Box-->
+        <div class="ui-messageBox__wrapper" v-if="delBox"  style="display: flex;">
+            <div class="ui-messageBox fadeInDown prac" @click.stop="">
+             <div class="ui-messageBox__header"><span class="messageBox-title">Внимание!</span>
+             <span class="button-close ui-messageBox-close" @click="CancelPrDel"></span></div>
+             <div class="ui-messageBox__content"><span>Вы желаете удалить {{pracD.title}} из системы?</span>
+             <!--Selector-->
+             </div>
+              <div class="ui-messageBox__footer">
+              <div class="button button-light ui-messageBox-cancel" @click="CancelPrDel">Нет</div>
+              <div class="button button-primary ui-messageBox-ok" @click="FinishPrDel">Да</div>
+              </div>
+              </div>
+              </div>
+          <!--Message Box-->
+
 
         
         </div>
@@ -165,6 +181,7 @@
 import DatePicker from '@sum.cumo/vue-datepicker'
 import { format, parse } from "date-fns";
 import '@sum.cumo/vue-datepicker/dist/vuejs-datepicker.css'
+import loader from '@/utils/loader'
 
 import {ru} from 'vuejs-datepicker/dist/locale'
 
@@ -188,7 +205,9 @@ export default {
       addButton: false,
       EditButton: false,
       showList: false,
+      delBox: false,
       format: 'dd.MM.yyyy',
+      pracD: '',
       grTitle: '',
       textinfo: '',
       practable: '',
@@ -245,6 +264,7 @@ export default {
 
   methods: {
     async selGr() {
+      loader.loaderStart()
       this.loadPrac = false
       this.currentEdlvl = (this.groups.find(group => group.id == this.currentGr)).edlvl
       this.students = await this.$store.dispatch('getStudGr', this.currentGr)
@@ -257,8 +277,26 @@ export default {
       } else {
         this.textinfo = 'У данной группы нет практик'
       }
+      setTimeout(function() {
+        loader.loaderEnd();
+      }, 300);
       //console.log(this.students)
       //console.log(this.currentEdlvl)
+    },
+
+    areUSurePrDel(prac){
+      this.delBox = true
+      this.pracD = prac
+    },
+
+    CancelPrDel(){
+      this.delBox = false
+      this.pracD = ''
+    },
+
+    async FinishPrDel(){
+      await this.removePrac(this.pracD)
+      this.CancelPrDel()
     },
 
     pracList(){

@@ -198,8 +198,8 @@ export default {
                         },
                   //verticalAlign: AlignmentType.CENTER,
                   margins: {
-                  right: 100,
-                  left: 100,
+                  right: 200,
+                  left: 200,
                   },
                   children: [
                     ],
@@ -213,8 +213,8 @@ export default {
                     type: WidthType.PERCENTAGE,
                         },
                   margins: {
-                  right: 100,
-                  left: 100,
+                  right: 200,
+                  left: 200,
                   },
                   children: [
                     ],
@@ -838,8 +838,8 @@ export default {
                         },
                   //verticalAlign: AlignmentType.CENTER,
                   margins: {
-                  right: 100,
-                  left: 100,
+                  right: 200,
+                  left: 200,
                   },
                   children: [
                     ],
@@ -853,8 +853,8 @@ export default {
                         },
                   //verticalAlign: AlignmentType.CENTER,
                   margins: {
-                  right: 100,
-                  left: 100,
+                  right: 200,
+                  left: 200,
                   },
                   children: [
                     ],
@@ -926,7 +926,19 @@ export default {
                     underline: {}
                     }),
 
-                    new TextRun( {
+                   
+
+                   
+                    
+
+               ]
+             })
+
+             
+             let bleftmC = new Paragraph({
+               alignment: AlignmentType.JUSTIFIED,
+               children: [
+                  new TextRun( {
                     text: '2 Производственный объект (изделие) ',
                     break: 1
                     }),
@@ -946,15 +958,23 @@ export default {
                     underline: {}
                     }),
 
-                    new TextRun( {
+               ]})
+
+              let bleftmP = new Paragraph({
+               alignment: AlignmentType.LEFT,
+               children: [
+                 new TextRun( {
                     text: '\t\t(курсового проекта, выпускной квалификационной работы)',
                     size: '16',
-                    break: 1
                     }),
+               ]})
 
+
+                let bleftmC2 = new Paragraph({
+               alignment: AlignmentType.JUSTIFIED,
+               children: [
                     new TextRun( {
                     text: '\t',
-                    break: 1,
                     size: 16
                     }),
                     new TextRun( {
@@ -976,10 +996,15 @@ export default {
                     text: ' ' + this.referral.listGraph,
                     underline: {}
                     }),
+               ]})
 
-                    new TextRun( {
+               let bleftmL = new Paragraph({
+               alignment: AlignmentType.LEFT,
+               children: [
+
+                new TextRun( {
                     text: 'Задание выдал:',
-                    break: 2
+                    break: 1
                     }),
 
                     new TextRun( {
@@ -1046,10 +1071,7 @@ export default {
                     text: '\t',
                     break: 1
                     }),
-                    
-
-               ]
-             })
+               ]})
 
             let brighth = new Paragraph({
               alignment: AlignmentType.CENTER,
@@ -1179,9 +1201,16 @@ export default {
                     break: 1
                     }),
 
-                    new TextRun( {
+                    
+              ]
+            })
+
+            let brightmJ = new Paragraph({
+              alignment: AlignmentType.JUSTIFIED,
+              children: [
+                new TextRun( {
                     text: '3 Общая характеристика студента ',
-                    break: 2
+                    break: 1
                     }),
 
                     new TextRun( {
@@ -1190,28 +1219,32 @@ export default {
                     }),
 
                     new TextRun( {
-                    text: '4 Замечания',
+                    text: '4 Замечания ',
                     break: 1
                     }),
 
                     new TextRun( {
-                    text: ' ' + this.referral.commentD,
+                    text: ' ' + this.referral.commentD + '\t',
                     underline: {}
                     }),
 
                     new TextRun( {
-                    text: '5 Рекомендации',
+                    text: '5 Рекомендации ',
                     break: 1
                     }),
 
                     new TextRun( {
-                    text: ' ' + this.referral.recomendD,
+                    text: ' ' + this.referral.recomendD + '\t',
                     underline: {}
                     }),
+              ]})
 
-                    new TextRun( {
+              let brightmL = new Paragraph({
+                alignment: AlignmentType.LEFT,
+                children: [
+                  new TextRun( {
                     text: 'Руководитель практики от кафедры ' + this.head.abbr,
-                    break: 2
+                    break: 1
                     }),
 
                     new TextRun( {
@@ -1254,8 +1287,8 @@ export default {
                     new TextRun( {
                     break: 1
                     }),
-              ]
-            })
+                ]
+              })
 
             left.addChildElement(lefth)
             left.addChildElement(leftm)
@@ -1269,8 +1302,14 @@ export default {
             right.addChildElement(rightb)
             bleft.addChildElement(blefth)
             bleft.addChildElement(bleftm)
+            bleft.addChildElement(bleftmC)
+            bleft.addChildElement(bleftmP)
+            bleft.addChildElement(bleftmC2)
+            bleft.addChildElement(bleftmL)
             bright.addChildElement(brighth)
             bright.addChildElement(brightm)
+            bright.addChildElement(brightmJ)
+            bright.addChildElement(brightmL)
             row.addChildElement(left)
             row.addChildElement(right)
             brow.addChildElement(bleft)

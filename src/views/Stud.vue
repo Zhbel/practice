@@ -105,6 +105,7 @@ export default {
         } else {
            this.textinfo = 'У вашей группы ' + this.group.title + ' нет практик'
         }
+        
      },
 
      methods:{
@@ -393,7 +394,8 @@ export default {
 
 <style lang="scss">
 .ui-card.prac{
-  width: 30%;
+  width: 30% !important;
+  margin: 1% !important;
 }
 .ui-card.head{
   max-width: max-content;
